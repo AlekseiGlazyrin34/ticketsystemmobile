@@ -95,7 +95,7 @@ export default function CreateRequestScreen() {
                 <TouchableOpacity style={[styles.footerBtn,{backgroundColor:'#fff'}]}  disabled={true}>
                     <ImageBackground source={require('../images/CrReq.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.footerBtn]} onPress={()=>navigation.navigate('')}>
+                <TouchableOpacity style={[styles.footerBtn]} onPress={()=>navigation.navigate('MyRequests')}>
                     <ImageBackground source={require('../images/List.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('')}>
