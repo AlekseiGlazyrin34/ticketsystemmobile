@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, RefreshControl,ImageBackground } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const MyRequests = () => {
   const [requests, setRequests] = useState([]);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+  const navigation = useNavigation();
 
   useEffect(() => {
-    loadData();
+    //loadData();
   }, []);
 
-  const loadData = async () => {
+  /*const loadData = async () => {
     try {
       const response = await fetch('https://localhost:7006/load-data', {
         headers: {
@@ -22,7 +24,7 @@ const MyRequests = () => {
     } catch (error) {
       console.error('Ошибка загрузки данных:', error);
     }
-  };
+  };*/
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -55,6 +57,7 @@ const MyRequests = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Мои запросы</Text>
+      <View style={{ flex: 0.5 ,marginHorizontal:10}}>
       <FlatList
         data={requests}
         keyExtractor={(item) => item.requestId.toString()}
@@ -62,7 +65,7 @@ const MyRequests = () => {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         style={styles.list}
       />
-
+      </View>
       <Text style={styles.title}>Подробности</Text>
       <View style={styles.details}>
         {selectedRequest ? (
@@ -88,10 +91,10 @@ const MyRequests = () => {
         )}
       </View>
       <View style={styles.footer}>
-                      <TouchableOpacity style={[styles.footerBtn,{backgroundColor:'#fff'}]} onPress={()=>navigation.navigate('CreateRequest')} >
+                      <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('CreateRequest')} >
                           <ImageBackground source={require('../images/CrReq.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
                       </TouchableOpacity>
-                      <TouchableOpacity style={[styles.footerBtn]} disabled={true}>
+                      <TouchableOpacity style={[styles.footerBtn,{backgroundColor:'#fff'}]} disabled={true}>
                           <ImageBackground source={require('../images/List.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
                       </TouchableOpacity>
                       <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('')}>
@@ -122,18 +125,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f6f0e6',
-    paddingHorizontal: 10,
-    paddingTop: 40,
+    paddingHorizontal: 0,
+    paddingTop: 40
+    
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
     marginVertical: 10,
+    marginHorizontal:10
   },
   list: {
     backgroundColor: '#fff',
     borderRadius: 10,
     marginBottom: 10,
+    height:'50%'
     
   },
   item: {
@@ -149,12 +155,14 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     minHeight: 100,
+    marginHorizontal:10
   },
   footer: {
     width:'100%',
     height:'10%',
     flexDirection:'row',
     position: 'absolute',
+    
     bottom:0,
     backgroundColor: 'rgba(0,0,0,0)',
   },

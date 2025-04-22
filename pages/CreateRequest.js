@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Alert,ImageBackground } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 export default function CreateRequestScreen() {
   const [problemName, setProblemName] = useState('');
@@ -8,6 +9,7 @@ export default function CreateRequestScreen() {
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorVisible, setErrorVisible] = useState(false);
+  const navigation = useNavigation();
 
   const handleSubmit = async () => {
     if (!problemName || !room || !priority) {
