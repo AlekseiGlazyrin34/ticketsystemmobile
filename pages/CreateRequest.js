@@ -103,7 +103,7 @@ export default function CreateRequestScreen() {
                 <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('')}>
                     <ImageBackground source={require('../images/Messages.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
                 </TouchableOpacity>
-                <TouchableOpacity  style={styles.footerBtn} onPress={()=>navigation.navigate('')}>
+                <TouchableOpacity  style={styles.footerBtn} onPress={()=>navigation.navigate('Account')}>
                     <ImageBackground source={require('../images/Profile.png')} style={{width:'95%',height:'95%'}}></ImageBackground>
                 </TouchableOpacity>
         </View>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const Account = () => {
@@ -43,6 +43,20 @@ const Account = () => {
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutButtonText}>Выйти из системы</Text>
       </TouchableOpacity>
+      <View style={styles.footer}>
+            <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('CreateRequest')} >
+                <ImageBackground source={require('../images/CrReq.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.footerBtn]} onPress={()=>navigation.navigate('MyRequests')}>
+                <ImageBackground source={require('../images/List.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('')}>
+                <ImageBackground source={require('../images/Messages.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
+            </TouchableOpacity>
+            <TouchableOpacity  style={[styles.footerBtn,{backgroundColor:'#fff'}]} disabled={true}>
+                <ImageBackground source={require('../images/Profile.png')} style={{width:'95%',height:'95%'}}></ImageBackground>
+            </TouchableOpacity>
+        </View>
     </View>
   );
 };
@@ -83,6 +97,21 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  footer: {
+    width:'100%',
+    height:'10%',
+    flexDirection:'row',
+    position: 'absolute',
+    
+    bottom:0,
+    backgroundColor: 'rgba(0,0,0,0)',
+  },
+  footerBtn:{
+    width:'25%',
+    height:'100%', 
+    backgroundColor: '#4c0080',
+    borderWidth:1,
   },
 });
 
