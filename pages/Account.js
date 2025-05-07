@@ -1,16 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
+import UserSession from '../UserSession';
 const Account = () => {
   const navigation = useNavigation();
 
   // Здесь ты можешь получать данные пользователя, например, через глобальное состояние или контекст
   const user = {
-    username: 'Иван Иванов',    // UserSession.Instance.Username
-    jobTitle: 'Инженер',        // UserSession.Instance.JobtTitle
-    role: 'Пользователь',       // UserSession.Instance.Role
-    login: 'ivanov',            // UserSession.Instance.Login
+    username: UserSession.username,    // UserSession.Instance.Username
+    jobTitle: UserSession.jobTitle,        // UserSession.Instance.JobtTitle
+    role: UserSession.role,       // UserSession.Instance.Role
+    login: UserSession.login,            // UserSession.Instance.Login
   };
 
   const handleLogout = () => {
@@ -22,7 +22,7 @@ const Account = () => {
           // Здесь очистить сохраненные токены или userData
           navigation.reset({
             index: 0,
-            routes: [{ name: 'Login' }], // Имя экрана входа
+            routes: [{ name: 'LoginScreen' }], // Имя экрана входа
           });
         }
       }

@@ -45,7 +45,7 @@ const LoginScreen = () => {
 
       if (response.ok) {
         setError('ОК');
-        /*const respData = await response.json();
+        const respData = await response.json();
         UserSession.username = respData.username;
         UserSession.login = respData.login;
         UserSession.password = respData.password;
@@ -57,8 +57,8 @@ const LoginScreen = () => {
 
         navigation.reset({
           index: 0,
-          routes: [{ name: 'MainTabs' }], // имя главного экрана/навигации
-        });*/
+          routes: [{ name: 'MyRequests' }], // имя главного экрана/навигации
+        });
       } else if (response.status === 401) {
         setError('Неправильный логин или пароль');
       } else {

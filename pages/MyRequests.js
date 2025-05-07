@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, RefreshControl,ImageBackground } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, RefreshControl, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import UserSession from '../UserSession'; // путь к классу UserSession
 
 const MyRequests = () => {
   const [requests, setRequests] = useState([]);
@@ -9,22 +10,22 @@ const MyRequests = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    //loadData();
+    loadData();
   }, []);
 
-  /*const loadData = async () => {
+  const loadData = async () => {
     try {
-      const response = await fetch('https://localhost:7006/load-data', {
-        headers: {
-          Authorization: 'Bearer ' + 'твой_токен', // подставь свой токен если нужно
-        },
-      });
+      const response = await UserSession.sendAuthorizedRequest(() => ({
+        url: 'https://localhost:7006/load-data',
+        method: 'GET',
+        headers: {}
+      }));
       const data = await response.json();
       setRequests(data);
     } catch (error) {
       console.error('Ошибка загрузки данных:', error);
     }
-  };*/
+  };
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -34,11 +35,11 @@ const MyRequests = () => {
 
   const loadDetails = async (requestId) => {
     try {
-      const response = await fetch(`https://localhost:7006/loadadd-data?reqid=${requestId}`, {
-        headers: {
-          Authorization: 'Bearer ' + 'твой_токен',
-        },
-      });
+      const response = await UserSession.sendAuthorizedRequest(() => ({
+        url: `https://localhost:7006/loadadd-data?reqid=${requestId}`,
+        method: 'GET',
+        headers: {}
+      }));
       const data = await response.json();
       setSelectedRequest(data[0]);
     } catch (error) {
@@ -91,19 +92,19 @@ const MyRequests = () => {
         )}
       </View>
       <View style={styles.footer}>
-                      <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('CreateRequest')} >
-                          <ImageBackground source={require('../images/CrReq.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
-                      </TouchableOpacity>
-                      <TouchableOpacity style={[styles.footerBtn,{backgroundColor:'#fff'}]} disabled={true}>
-                          <ImageBackground source={require('../images/List.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
-                      </TouchableOpacity>
-                      <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('')}>
-                          <ImageBackground source={require('../images/Messages.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
-                      </TouchableOpacity>
-                      <TouchableOpacity  style={styles.footerBtn} onPress={()=>navigation.navigate('Account')}>
-                          <ImageBackground source={require('../images/Profile.png')} style={{width:'95%',height:'95%'}}></ImageBackground>
-                      </TouchableOpacity>
-        </View>
+        <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('CreateRequest')} >
+          <ImageBackground source={require('../images/CrReq.png')} style={{width:'100%',height:'100%'}} />
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.footerBtn,{backgroundColor:'#fff'}]} disabled={true}>
+          <ImageBackground source={require('../images/List.png')} style={{width:'100%',height:'100%'}} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('')}>
+          <ImageBackground source={require('../images/Messages.png')} style={{width:'100%',height:'100%'}} />
+        </TouchableOpacity>
+        <TouchableOpacity  style={styles.footerBtn} onPress={()=>navigation.navigate('Account')}>
+          <ImageBackground source={require('../images/Profile.png')} style={{width:'95%',height:'95%'}} />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -127,7 +128,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f6f0e6',
     paddingHorizontal: 0,
     paddingTop: 40
-    
   },
   title: {
     fontSize: 18,
@@ -140,7 +140,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
     height:'50%'
-    
   },
   item: {
     padding: 10,
@@ -162,7 +161,6 @@ const styles = StyleSheet.create({
     height:'10%',
     flexDirection:'row',
     position: 'absolute',
-    
     bottom:0,
     backgroundColor: 'rgba(0,0,0,0)',
   },
