@@ -37,7 +37,7 @@ const CreateRequest = () => {
         body: JSON.stringify({
           problemName,
           room,
-          priorityName: priority,
+          priority: priority,
           description,
         }),
       }));
