@@ -3,7 +3,7 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity, RefreshControl, Ima
 import { useNavigation } from '@react-navigation/native';
 import UserSession from '../UserSession'; // путь к классу UserSession
 
-const MyRequests = () => {
+const UserRequests = () => {
   const [requests, setRequests] = useState([]);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -172,4 +172,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyRequests;
+export default UserRequests;

@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import UserSession from '../UserSession';
 const Account = () => {
   const navigation = useNavigation();
-
+  
   // Здесь ты можешь получать данные пользователя, например, через глобальное состояние или контекст
   const user = {
     username: UserSession.username,    // UserSession.Instance.Username
@@ -16,18 +16,21 @@ const Account = () => {
   const handleLogout = () => {
     // Очистить сессию пользователя (например, удалить токены)
     // Навигация на экран авторизации
-    Alert.alert('Выход', 'Вы уверены, что хотите выйти?', [
-      { text: 'Отмена', style: 'cancel' },
-      { text: 'Выйти', style: 'destructive', onPress: () => {
+    console.log('Нажата кнопка выхода');
+    //Alert.alert('Выход', 'Вы уверены, что хотите выйти?', [
+      //{ text: 'Отмена', style: 'cancel' },
+      //{ text: 'Выйти', style: 'destructive', 
+        //onPress: () => {
           // Здесь очистить сохраненные токены или userData
+          UserSession.clear();
           navigation.reset({
             index: 0,
             routes: [{ name: 'LoginScreen' }], // Имя экрана входа
           });
         }
-      }
-    ]);
-  };
+      //}
+    //]);
+  //};
 
   return (
     <View style={styles.container}>
@@ -47,7 +50,7 @@ const Account = () => {
             <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('CreateRequest')} >
                 <ImageBackground source={require('../images/CrReq.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.footerBtn]} onPress={()=>navigation.navigate('MyRequests')}>
+            <TouchableOpacity style={[styles.footerBtn]} onPress={()=>navigation.navigate('Requests')}>
                 <ImageBackground source={require('../images/List.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
             </TouchableOpacity>
             <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('')}>

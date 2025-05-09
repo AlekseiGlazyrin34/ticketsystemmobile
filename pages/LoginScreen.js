@@ -57,7 +57,7 @@ const LoginScreen = () => {
 
         navigation.reset({
           index: 0,
-          routes: [{ name: 'MyRequests' }], // имя главного экрана/навигации
+          routes: [{ name: 'Requests' }], // имя главного экрана/навигации
         });
       } else if (response.status === 401) {
         setError('Неправильный логин или пароль');
