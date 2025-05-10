@@ -101,9 +101,13 @@ const CreateRequest = () => {
             <TouchableOpacity style={[styles.footerBtn,{backgroundColor:'#fff'}]}  disabled={true}>
                 <ImageBackground source={require('../images/CrReq.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.footerBtn]} onPress={()=>navigation.navigate('Requests')}>
+            {UserSession.role === 'Admin' ?(<TouchableOpacity style={[styles.footerBtn]} onPress={()=>navigation.navigate('AdminRequests')}>
                 <ImageBackground source={require('../images/List.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
-            </TouchableOpacity>
+            </TouchableOpacity>) 
+            : (<TouchableOpacity style={[styles.footerBtn]} onPress={()=>navigation.navigate('UserRequests')}>
+                <ImageBackground source={require('../images/List.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
+            </TouchableOpacity>)}
+            
             <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('')}>
                 <ImageBackground source={require('../images/Messages.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
             </TouchableOpacity>
@@ -120,10 +124,12 @@ const styles = StyleSheet.create({
     padding: 20,
     flex: 1,
     backgroundColor: '#f6f0e6',
+    paddingHorizontal:0
   },
   label: {
     fontWeight: 'bold',
     marginTop: 10,
+    marginHorizontal: 20
   },
   input: {
     borderWidth: 1,
@@ -132,6 +138,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 5,
     backgroundColor: '#fff',
+    marginHorizontal: 20
   },
   textArea: {
     borderWidth: 1,
@@ -141,6 +148,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     backgroundColor: '#fff',
     height: 100,
+    marginHorizontal: 20
   },
   pickerContainer: {
     borderWidth: 1,
@@ -148,10 +156,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 5,
     backgroundColor: '#fff',
+    marginHorizontal: 20
   },
   pickerAndroid: {
     height: 50,
     width: '100%',
+    marginHorizontal: 20
   },
   button: {
     marginTop: 20,
@@ -159,6 +169,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 5,
     alignItems: 'center',
+    marginHorizontal: 20
   },
   buttonText: {
     color: '#fff',

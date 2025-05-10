@@ -1,4 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -11,21 +12,22 @@ import UserSession from './UserSession';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
-  const role = UserSession.role;
+  
+  
+
+  
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="LoginScreen" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="CreateRequest" component={CreateRequest} />
         <Stack.Screen name="Account" component={Account} />
-        {role === 'Admin' ? (
-          <Stack.Screen name="Requests" component={AdminRequests} options={{ title: 'Заявки (Админ)' }} />
-        ) : (
-          <Stack.Screen name="Requests" component={UserRequests} options={{ title: 'Мои заявки' }} />
-        )}
+        <Stack.Screen name="AdminRequests" component={AdminRequests} options={{ title: 'Заявки (Админ)' }} />
+        <Stack.Screen name="UserRequests" component={UserRequests} options={{ title: 'Мои заявки' }} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
+  
 }
 
 const styles = StyleSheet.create({

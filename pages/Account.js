@@ -50,9 +50,12 @@ const Account = () => {
             <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('CreateRequest')} >
                 <ImageBackground source={require('../images/CrReq.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.footerBtn]} onPress={()=>navigation.navigate('Requests')}>
+            {UserSession.role === 'Admin' ?(<TouchableOpacity style={[styles.footerBtn]} onPress={()=>navigation.navigate('AdminRequests')}>
+            <ImageBackground source={require('../images/List.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
+            </TouchableOpacity>) 
+            : (<TouchableOpacity style={[styles.footerBtn]} onPress={()=>navigation.navigate('UserRequests')}>
                 <ImageBackground source={require('../images/List.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
-            </TouchableOpacity>
+            </TouchableOpacity>)}
             <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('')}>
                 <ImageBackground source={require('../images/Messages.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
             </TouchableOpacity>

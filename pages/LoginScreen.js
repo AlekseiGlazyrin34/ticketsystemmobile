@@ -54,12 +54,20 @@ const LoginScreen = () => {
         UserSession.accessToken = respData.token;
         UserSession.refreshToken = respData.refreshToken;
         UserSession.userId = parseInt(respData.userId);
-
+        
+        if (UserSession.role === 'Admin') {
         navigation.reset({
           index: 0,
-          routes: [{ name: 'Requests' }], // имя главного экрана/навигации
+          routes: [{ name: 'AdminRequests' }],
         });
-      } else if (response.status === 401) {
+      } else {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'UserRequests' }],
+        });
+      } 
+      } 
+      else if (response.status === 401) {
         setError('Неправильный логин или пароль');
       } else {
         setError('Ошибка при входе');
