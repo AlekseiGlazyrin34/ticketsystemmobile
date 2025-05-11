@@ -123,7 +123,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     flex: 1,
-    backgroundColor: '#f6f0e6',
     paddingHorizontal:0
   },
   label: {
@@ -165,15 +164,17 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 20,
-    backgroundColor: '#4c0080',
+    backgroundColor: '#109c35',
     padding: 12,
     borderRadius: 5,
+    borderColor: '#19e04e',
     alignItems: 'center',
     marginHorizontal: 20
   },
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
+    
   },
   footer: {
     width:'100%',

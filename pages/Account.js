@@ -70,7 +70,6 @@ const Account = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f6f0e6',
     padding: 20,
     alignItems: 'center',
     justifyContent: 'flex-start',

@@ -124,7 +124,6 @@ const getPriorityColor = (priority) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#f6f0e6',
     flex: 1,
     paddingHorizontal: 0,
     paddingTop: 40

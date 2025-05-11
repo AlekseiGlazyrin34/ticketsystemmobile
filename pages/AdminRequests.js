@@ -112,7 +112,9 @@ const AdminRequests = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Запросы</Text>
+      <View style={{ flex: 0.5 ,marginHorizontal:20}}>
       <FlatList
+        style={styles.list}
         data={requests}
         keyExtractor={(item) => item.requestId.toString()}
         renderItem={({ item }) => (
@@ -126,6 +128,7 @@ const AdminRequests = () => {
           </TouchableOpacity>
         )}
       />
+      </View>
       <View style={styles.footer}>
             <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('CreateRequest')} >
               <ImageBackground source={require('../images/CrReq.png')} style={{width:'100%',height:'100%'}} />
@@ -148,17 +151,22 @@ export default AdminRequests;
 
 const styles = StyleSheet.create({
   container: { 
-    padding: 20,
     flex: 1,
+    paddingTop: 40,
     paddingHorizontal: 0,
     },
-  header: { fontSize: 20, fontWeight: 'bold', marginBottom: 10,marginHorizontal:20 },
-  
+  header: { fontSize: 20, fontWeight: 'bold', marginBottom: 20,marginHorizontal:20 },
+  list: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    marginBottom: 10,
+    
+  },
   listItem: {
     padding: 15,
     borderBottomWidth: 1,
     borderColor: '#ccc',
-    marginHorizontal:20
+
   },
   backArrow: {
     fontSize: 18,
