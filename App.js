@@ -7,7 +7,8 @@ import CreateRequest from './pages/CreateRequest';
 import UserRequests from './pages/UserRequests';
 import Account from './pages/Account'; 
 import LoginScreen from './pages/LoginScreen';
-import AdminRequests from './pages/AdminRequests'; 
+import AdminRequests from './pages/AdminRequests';
+import Chats from './pages/Chats';
 import UserSession from './UserSession';
 
 export default function App() {
@@ -24,6 +25,7 @@ export default function App() {
         <Stack.Screen name="AdminRequests" component={AdminRequests} options={{ title: 'Заявки (Админ)' }} />
         <Stack.Screen name="UserRequests" component={UserRequests} options={{ title: 'Мои заявки' }} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
+        <Stack.Screen name="Chats" component={Chats} />
       </Stack.Navigator>
     </NavigationContainer>
   );

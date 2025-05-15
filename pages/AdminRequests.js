@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
-  View, Text, TouchableOpacity, FlatList, TextInput, StyleSheet, ScrollView,Picker, ImageBackground
+  View, Text, TouchableOpacity, FlatList, TextInput, StyleSheet, ScrollView,Picker, ImageBackground,CheckBox
 } from 'react-native';
+
 import { useNavigation } from '@react-navigation/native';
 import UserSession from '../UserSession'; 
 
@@ -11,6 +12,7 @@ const AdminRequests = () => {
   const [status, setStatus] = useState('');
   const [response, setResponse] = useState('');
   const [showDetails, setShowDetails] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
   const navigation = useNavigation();
   
   useEffect(() => {
@@ -45,13 +47,15 @@ const AdminRequests = () => {
 
   const saveChanges = async () => {
     const res = await UserSession.sendAuthorizedRequest(() =>
-      fetch('https://localhost:7006/save-changes', {
+      ({
+        url: 'https://localhost:7006/save-changes', 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           reqId: selectedRequest.requestId,
           statusName: status,
-          responseContent: response
+          responseContent: response,
+          createChat: isChecked
         })
       })
     );
@@ -60,7 +64,11 @@ const AdminRequests = () => {
       alert('Изменения сохранены');
       fetchRequests();
       setShowDetails(false);
-    } else {
+    } 
+    else if(res.text() == 'ChatAlreadyExist') {
+      alert('Чат с данной проблемой уже существует');
+    }
+    else {
       alert('Ошибка при сохранении');
     }
   };
@@ -101,7 +109,14 @@ const AdminRequests = () => {
           <Picker.Item label="В работе" value="В работе" />
           <Picker.Item label="Закрыт" value="Закрыт" />
         </Picker>
-
+        <View style={{flexDirection:'row',marginHorizontal:20}}>
+        <Text>Создать чат</Text>
+        <CheckBox 
+        style={{marginHorizontal:5}}
+        value={isChecked}
+        onValueChange={setIsChecked}
+        />
+        </View>
         <TouchableOpacity style={styles.button} onPress={saveChanges}>
           <Text style={styles.buttonText}>Сохранить изменения</Text>
         </TouchableOpacity>
@@ -136,7 +151,7 @@ const AdminRequests = () => {
             <TouchableOpacity style={[styles.footerBtn,{backgroundColor:'#fff'}]} disabled={true}>
               <ImageBackground source={require('../images/List.png')} style={{width:'100%',height:'100%'}} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('')}>
+            <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('Chats')}>
               <ImageBackground source={require('../images/Messages.png')} style={{width:'100%',height:'100%'}} />
             </TouchableOpacity>
             <TouchableOpacity  style={styles.footerBtn} onPress={()=>navigation.navigate('Account')}>

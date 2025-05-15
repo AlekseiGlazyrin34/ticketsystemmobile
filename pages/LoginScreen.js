@@ -58,12 +58,12 @@ const LoginScreen = () => {
         if (UserSession.role === 'Admin') {
         navigation.reset({
           index: 0,
-          routes: [{ name: 'AdminRequests' }],
+          routes: [{ name: 'Chats' }],
         });
       } else {
         navigation.reset({
           index: 0,
-          routes: [{ name: 'UserRequests' }],
+          routes: [{ name: 'Chats' }],
         });
       } 
       } 

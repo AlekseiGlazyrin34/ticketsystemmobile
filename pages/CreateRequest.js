@@ -108,7 +108,7 @@ const CreateRequest = () => {
                 <ImageBackground source={require('../images/List.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
             </TouchableOpacity>)}
             
-            <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('')}>
+            <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('Chats')}>
                 <ImageBackground source={require('../images/Messages.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
             </TouchableOpacity>
             <TouchableOpacity  style={styles.footerBtn} onPress={()=>navigation.navigate('Account')}>
