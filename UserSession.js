@@ -1,4 +1,6 @@
 
+
+
 class UserSession {
     static instance = null;
   
@@ -17,7 +19,12 @@ class UserSession {
     login = null;
     password = null;
     role = null;
-  
+    static onLogoutCallback = null;
+
+    setLogoutCallback(callback) {
+      this.onLogoutCallback = callback;
+    }
+
     async refreshAccessToken() {
       try {
         const response = await fetch('https://localhost:7006/refresh-token', {
@@ -27,15 +34,17 @@ class UserSession {
           },
           body: this.refreshToken,
         });
-  
+        
         const resText = await response.text();
-  
+        
+
         if (response.ok) {
           this.accessToken = resText;
-        } else if (resText === 'LoginAgain') {
-          // Обработка выхода из системы — например, навигация на экран логина
+        } else if (response.status === 401) {
+          
           console.warn('Срок действия токена истёк. Перенаправление на экран входа...');
-          // Навигацию можно внедрить позже через callback
+          this.clear(); // очистим сессию
+          if (this.onLogoutCallback) this.onLogoutCallback();
         }
       } catch (error) {
         console.error('Ошибка обновления токена:', error);
@@ -49,7 +58,7 @@ class UserSession {
         ...request.headers,
         Authorization: `Bearer ${this.accessToken}`,
       };
-  
+      
       let response = await fetch(request.url, request);
   
       if (response.status === 401) {
@@ -59,6 +68,8 @@ class UserSession {
           ...request.headers,
           Authorization: `Bearer ${this.accessToken}`,
         };
+        console.log(this.accessToken+"токен");
+
         response = await fetch(request.url, request);
       }
   

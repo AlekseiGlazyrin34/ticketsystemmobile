@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, TextInput, StyleSheet,ImageBackground } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, TextInput, StyleSheet,ImageBackground,Modal,Button } from 'react-native';
+
+
 import UserSession from '../UserSession';
 import { useNavigation } from '@react-navigation/native';
 
@@ -9,8 +11,13 @@ const Chats = () => {
   const [messages, setMessages] = useState([]);
   const [currentChatId, setCurrentChatId] = useState(null);
   const [inputText, setInputText] = useState('');
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [usersList, setUsersList] = useState([]);
+
   var chatsurl;
   const navigation = useNavigation();
+
   useEffect(() => {
     fetchChats();
   }, []);
@@ -18,6 +25,34 @@ const Chats = () => {
   if (UserSession.role == 'Admin') chatsurl = 'https://localhost:7006/get-adminchats'
   else chatsurl = 'https://localhost:7006/get-chats'
   
+  const fetchUsers = async () => {
+    const res = await UserSession.sendAuthorizedRequest(() => ({
+      url: 'https://localhost:7006/get-users', // должен вернуть [{userId, username}]
+      method: 'GET',
+      headers: {}
+    }));
+    const data = await res.json();
+    setUsersList(data);
+  };
+
+  const createChat = async () => {
+    if (!selectedUserId) return alert('Выберите пользователя');
+  
+    await UserSession.sendAuthorizedRequest(() => ({
+      url: `https://localhost:7006/create-chat?userId=${selectedUserId}`,
+      method: 'POST',
+      headers: {}
+    }));
+
+    setShowCreateDialog(false);
+    fetchChats();
+  };
+
+  const openCreateDialog = async () => {
+    await fetchUsers();
+    setShowCreateDialog(true);
+  };
+
 
   const fetchChats = async () => {
     try {
@@ -84,6 +119,45 @@ const Chats = () => {
         </TouchableOpacity>
       )}
     />
+    
+    {UserSession.role === 'Admin' && (
+  <TouchableOpacity style={{width:'20%',height:'20%',backgroundColor:'#4c0080'}} onPress={openCreateDialog}>
+    <Text style={{ textAlign: 'center', color: 'white' }}>Создать чат</Text>
+  </TouchableOpacity>
+  )}
+
+  <Modal visible={showCreateDialog} animationType="slide" transparent={true}>
+  <View style={{ flex: 1, backgroundColor: '#000000aa', justifyContent: 'center' }}>
+    <View style={{ backgroundColor: 'white', margin: 20, padding: 20, borderRadius: 10 }}>
+      <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Создать чат</Text>
+      
+      <Text style={{ marginTop: 10 }}>Выберите пользователя:</Text>
+      <FlatList
+        data={usersList}
+        keyExtractor={(item) => item.userId.toString()}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => setSelectedUserId(item.userId)}>
+            <Text style={{
+              padding: 10,
+              backgroundColor: selectedUserId === item.userId ? '#ddd' : '#f9f9f9',
+              marginVertical: 2,
+              borderRadius: 5
+            }}>
+              {item.username}
+            </Text>
+          </TouchableOpacity>
+        )}
+      />
+
+
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 15 }}>
+        <Button title="Создать" onPress={createChat} />
+        <Button title="Отмена" onPress={() => setShowCreateDialog(false)} />
+      </View>
+    </View>
+  </View>
+</Modal>
+
     <View style={styles.footer}>
             <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('CreateRequest')} >
               <ImageBackground source={require('../images/CrReq.png')} style={{width:'100%',height:'100%'}} />

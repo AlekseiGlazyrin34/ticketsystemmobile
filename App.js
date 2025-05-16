@@ -10,15 +10,30 @@ import LoginScreen from './pages/LoginScreen';
 import AdminRequests from './pages/AdminRequests';
 import Chats from './pages/Chats';
 import UserSession from './UserSession';
+import { createNavigationContainerRef } from '@react-navigation/native';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
+  const navigationRef = createNavigationContainerRef();
   
+  const [isNavigationReady, setIsNavigationReady] = useState(false);
+
+useEffect(() => {
+  if (isNavigationReady) {
+    UserSession.setLogoutCallback(() => {
+      navigationRef.reset({
+        index: 0,
+        routes: [{ name: 'LoginScreen' }],
+      });
+    });
+  }
+}, [isNavigationReady]);
   
 
   
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}
+    onReady={() => setIsNavigationReady(true)}>
       <Stack.Navigator initialRouteName="LoginScreen" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="CreateRequest" component={CreateRequest} />
         <Stack.Screen name="Account" component={Account} />
