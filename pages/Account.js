@@ -48,19 +48,19 @@ const Account = () => {
       </TouchableOpacity>
       <View style={styles.footer}>
             <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('CreateRequest')} >
-                <ImageBackground source={require('../images/CrReq.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
+                <ImageBackground source={require('../images/CrReqW.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
             </TouchableOpacity>
             {UserSession.role === 'Admin' ?(<TouchableOpacity style={[styles.footerBtn]} onPress={()=>navigation.navigate('AdminRequests')}>
-            <ImageBackground source={require('../images/List.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
+            <ImageBackground source={require('../images/ListW.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
             </TouchableOpacity>) 
             : (<TouchableOpacity style={[styles.footerBtn]} onPress={()=>navigation.navigate('UserRequests')}>
-                <ImageBackground source={require('../images/List.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
+                <ImageBackground source={require('../images/ListW.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
             </TouchableOpacity>)}
             <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('Chats')}>
-                <ImageBackground source={require('../images/Messages.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
+                <ImageBackground source={require('../images/MessagesW.png')} style={{width:'90%',height:'90%'}}></ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity  style={[styles.footerBtn,{backgroundColor:'#fff'}]} disabled={true}>
-                <ImageBackground source={require('../images/Profile.png')} style={{width:'95%',height:'95%'}}></ImageBackground>
+            <TouchableOpacity  style={[styles.footerBtn,{backgroundColor:'#f5f7fc'}]} disabled={true}>
+                <ImageBackground source={require('../images/Profile.png')} style={{width:'80%',height:'80%',position: 'absolute',top: '25%', left: '0%',}}></ImageBackground>
             </TouchableOpacity>
         </View>
     </View>
@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'center',
     justifyContent: 'flex-start',
+    backgroundColor:'#f5f7fc',
   },
   title: {
     fontSize: 20,
@@ -110,13 +111,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     
     bottom:0,
-    backgroundColor: 'rgba(0,0,0,0)',
+    backgroundColor: '#4371e6',
   },
   footerBtn:{
     width:'25%',
     height:'100%', 
-    backgroundColor: '#4c0080',
-    borderWidth:1,
+    backgroundColor: '#4371e6',
+    borderWidth:0,
   },
 });
 

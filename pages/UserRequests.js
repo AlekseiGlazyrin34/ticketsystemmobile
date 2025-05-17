@@ -81,8 +81,11 @@ const UserRequests = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Запросы</Text>
-      <View style={{ flex: 0.5 ,marginHorizontal:20}}>
+      <View style={{backgroundColor:'#4371e6',height:'7%',justifyContent:'space-around'}}>
+        <Text style={styles.header}>Запросы</Text>
+      </View>
+      
+      <View style={{ height:'83%'}}>
       <FlatList
         style={styles.list}
         data={requests}
@@ -94,23 +97,24 @@ const UserRequests = () => {
           >
             <Text>Проблема: {item.problemName}</Text>
             <Text>Статус: {item.statusName}</Text>
-            <Text>Дата: {item.reqtime}</Text>
+            <Text>Дата: {new Date(item.reqtime).toLocaleString()}</Text>
           </TouchableOpacity>
         )}
       />
+      
       </View>
-      <View style={styles.footer}>
+      <View style={styles.footer}> 
             <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('CreateRequest')} >
-              <ImageBackground source={require('../images/CrReq.png')} style={{width:'100%',height:'100%'}} />
+              <ImageBackground source={require('../images/CrReqW.png')} style={{width:'100%',height:'100%'}} />
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.footerBtn,{backgroundColor:'#fff'}]} disabled={true}>
+            <TouchableOpacity style={[styles.footerBtn,{backgroundColor:'#f5f7fc'}]} disabled={true}>
               <ImageBackground source={require('../images/List.png')} style={{width:'100%',height:'100%'}} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('Chats')}>
-              <ImageBackground source={require('../images/Messages.png')} style={{width:'100%',height:'100%'}} />
+              <ImageBackground source={require('../images/MessagesW.png')} style={{width:'100%',height:'100%'}} />
             </TouchableOpacity>
             <TouchableOpacity  style={styles.footerBtn} onPress={()=>navigation.navigate('Account')}>
-              <ImageBackground source={require('../images/Profile.png')} style={{width:'95%',height:'95%'}} />
+              <ImageBackground source={require('../images/ProfileW.png')} style={{width:'95%',height:'95%'}} />
             </TouchableOpacity>
       </View>
     </View>
@@ -122,15 +126,15 @@ export default UserRequests;
 const styles = StyleSheet.create({
   container: { 
     flex: 1,
-    paddingTop: 40,
+    paddingTop: 0,
     paddingHorizontal: 0,
-    },
-  header: { fontSize: 20, fontWeight: 'bold', marginBottom: 20,marginHorizontal:20 },
-  list: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    marginBottom: 10,
     
+    },
+  header: { fontSize: 20, fontWeight: 'bold',marginHorizontal:20,color:'#f5f7fc' },
+  list: {
+    backgroundColor: '#f5f7fc',
+    marginBottom: 0,
+    borderTopWidth:1,
   },
   listItem: {
     padding: 15,
@@ -183,13 +187,13 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     position: 'absolute',
     bottom:0,
-    backgroundColor: 'rgba(0,0,0,0)',
+    backgroundColor: '#4371e6',
   },
   footerBtn:{
     width:'25%',
     height:'100%', 
-    backgroundColor: '#4c0080',
-    borderWidth:1,
+    backgroundColor: '#4371e6',
+    borderWidth:0,
   },
 });
 

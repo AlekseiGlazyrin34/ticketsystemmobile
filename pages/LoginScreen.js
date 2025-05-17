@@ -58,12 +58,12 @@ const LoginScreen = () => {
         if (UserSession.role === 'Admin') {
         navigation.reset({
           index: 0,
-          routes: [{ name: 'Chats' }],
+          routes: [{ name: 'AdminRequests' }],
         });
       } else {
         navigation.reset({
           index: 0,
-          routes: [{ name: 'Chats' }],
+          routes: [{ name: 'UserRequests' }],
         });
       } 
       } 
@@ -107,7 +107,7 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f6f0e6',
+    backgroundColor: '#f5f7fc',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,

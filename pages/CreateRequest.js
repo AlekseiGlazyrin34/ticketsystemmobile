@@ -58,6 +58,9 @@ const CreateRequest = () => {
 
   return (
     <View style={styles.container}>
+      <View style={{backgroundColor:'#4371e6',height:'7%',justifyContent:'space-around'}}>
+          <Text style={styles.header}>Создание запроса</Text>
+      </View>
       <Text style={styles.label}>Проблема</Text>
       <TextInput
         style={styles.input}
@@ -98,21 +101,21 @@ const CreateRequest = () => {
         <Text style={styles.buttonText}>Создать запрос</Text>
       </TouchableOpacity>
       <View style={styles.footer}>
-            <TouchableOpacity style={[styles.footerBtn,{backgroundColor:'#fff'}]}  disabled={true}>
+            <TouchableOpacity style={[styles.footerBtn,{backgroundColor:'#f5f7fc'}]}  disabled={true}>
                 <ImageBackground source={require('../images/CrReq.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
             </TouchableOpacity>
             {UserSession.role === 'Admin' ?(<TouchableOpacity style={[styles.footerBtn]} onPress={()=>navigation.navigate('AdminRequests')}>
-                <ImageBackground source={require('../images/List.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
+                <ImageBackground source={require('../images/ListW.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
             </TouchableOpacity>) 
             : (<TouchableOpacity style={[styles.footerBtn]} onPress={()=>navigation.navigate('UserRequests')}>
-                <ImageBackground source={require('../images/List.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
+                <ImageBackground source={require('../images/ListW.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
             </TouchableOpacity>)}
             
             <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('Chats')}>
-                <ImageBackground source={require('../images/Messages.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
+                <ImageBackground source={require('../images/MessagesW.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
             </TouchableOpacity>
             <TouchableOpacity  style={styles.footerBtn} onPress={()=>navigation.navigate('Account')}>
-                <ImageBackground source={require('../images/Profile.png')} style={{width:'95%',height:'95%'}}></ImageBackground>
+                <ImageBackground source={require('../images/ProfileW.png')} style={{width:'95%',height:'95%'}}></ImageBackground>
             </TouchableOpacity>
         </View>
     </View>
@@ -121,10 +124,12 @@ const CreateRequest = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: 0,
     flex: 1,
-    paddingHorizontal:0
+    paddingHorizontal:0,
+    backgroundColor:'#f5f7fc'
   },
+  header: { fontSize: 20, fontWeight: 'bold',marginHorizontal:20,color:'#f5f7fc' },
   label: {
     fontWeight: 'bold',
     marginTop: 10,
@@ -182,13 +187,14 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     position: 'absolute',
     bottom:0,
-    backgroundColor: 'rgba(0,0,0,0)',
+    backgroundColor: '#4371e6',
   },
   footerBtn:{
     width:'25%',
     height:'100%', 
-    backgroundColor: '#4c0080',
-    borderWidth:1,
+    backgroundColor: '#4371e6',
+    borderColor:'#4371e6',
+    borderWidth:0,
   },
 });
 
