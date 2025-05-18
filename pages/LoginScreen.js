@@ -3,12 +3,12 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   StyleSheet,
   TouchableOpacity,
   Keyboard,
 } from 'react-native';
 import UserSession from '../UserSession'; // предполагаем, что синглтон сохранён тут
+import * as NavigationBar from 'expo-navigation-bar';
 import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = () => {
@@ -17,7 +17,7 @@ const LoginScreen = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
-
+  NavigationBar.setVisibilityAsync("hidden");
   const handleLogin = async () => {
     Keyboard.dismiss();
 
@@ -35,12 +35,14 @@ const LoginScreen = () => {
     };
 
     try {
-      const response = await fetch('https://localhost:7006/login', {
+      
+      const response = await fetch('http://192.168.2.62:7006/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
+        
       });
 
       if (response.ok) {
@@ -73,6 +75,7 @@ const LoginScreen = () => {
         setError('Ошибка при входе');
       }
     } catch (e) {
+      console.log(e);
       setError('Не удалось установить соединение с сервером');
     }
 

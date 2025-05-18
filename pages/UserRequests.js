@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  View, Text, TouchableOpacity, FlatList, TextInput, StyleSheet, ScrollView,Picker, ImageBackground
+  View, Text, TouchableOpacity, FlatList, TextInput, StyleSheet, ScrollView,Picker, ImageBackground, ActivityIndicator
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import UserSession from '../UserSession'; 
@@ -11,6 +11,7 @@ const UserRequests = () => {
   const [status, setStatus] = useState('');
   const [response, setResponse] = useState('');
   const [showDetails, setShowDetails] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
   
   useEffect(() => {
@@ -18,13 +19,16 @@ const UserRequests = () => {
   }, []);
 
   const fetchRequests = async () => {
+    setIsLoading(true);
     const res = await UserSession.sendAuthorizedRequest(() =>({
+      
       url: 'https://localhost:7006/load-data',
       method: 'GET',
       headers: {}
   }));
     const data = await res.json();
     setRequests(data);
+    setIsLoading(false);
   };
 
   const loadRequestDetails = async (reqId) => {
@@ -46,25 +50,25 @@ const UserRequests = () => {
   if (showDetails && selectedRequest) {
     return (
       <ScrollView contentContainerStyle={styles.container}>
-        <View style={{backgroundColor:'#4371e6',height:'7%',alignItems: 'center', justifyContent: 'space-between',flexDirection:'row'}}>
-            <TouchableOpacity onPress={() => {setShowDetails(false)}}>
-              <Text style={styles.header}>← Назад</Text>
-              <Text style={styles.header}>Подробности запроса</Text>
-            </TouchableOpacity>
-        </View>
+       <View style={{backgroundColor:'#4371e6',height:'7%',alignItems: 'center', justifyContent: 'space-between',flexDirection:'row'}}>
+          <TouchableOpacity onPress={() => {setShowDetails(false)}}>
+            <Text style={styles.header}>← Назад</Text>
+          </TouchableOpacity>
+          <Text style={styles.header}>Подробности запроса</Text>
+       </View>
 
         
-        <Text style={{marginHorizontal:20}}>ID: {selectedRequest.requestId}</Text>
-        <Text style={{marginHorizontal:20}}>От: {selectedRequest.username}</Text>
-        <Text style={{marginHorizontal:20}}>Проблема: {selectedRequest.problemName}</Text>
-        <Text style={{marginHorizontal:20}}>Дата/время: {selectedRequest.reqtime}</Text>
-        <Text style={{marginHorizontal:20}}>Приоритет: {selectedRequest.priorityName}</Text>
-        <Text style={{marginHorizontal:20}}>Помещение: {selectedRequest.room}</Text>
-        <Text style={{marginHorizontal:20}}>Описание:</Text>
+        <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>От: </Text > <Text style={{fontSize:18}}>{selectedRequest.username}</Text></View>
+        <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>Проблема: </Text> <Text style={{fontSize:18}}>{selectedRequest.problemName}</Text></View>
+        <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>Дата/время: </Text> <Text style={{fontSize:18}}>{new Date(selectedRequest.reqtime).toLocaleString()}</Text></View>
+        <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>Приоритет: </Text> <Text style={{fontSize:18}}>{selectedRequest.priorityName}</Text></View>
+        <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>Помещение: </Text> <Text style={{fontSize:18}}>{selectedRequest.room}</Text></View>
+        
+        <Text style={{marginHorizontal:20,fontWeight:'bold',marginTop:10,fontSize:18}}>Описание:</Text>
         <Text style={styles.textBox}>{selectedRequest.description}</Text>
-        <Text style={{marginHorizontal:20}}>Ответ от: {selectedRequest.respusername || '-'}</Text>
+        <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>Ответ от: {selectedRequest.respusername || '-'}</Text></View>
 
-        <Text style={{marginHorizontal:20}}>Ответ:</Text>
+        <Text style={{marginHorizontal:20,fontWeight:'bold',fontSize:18}}>Ответ:</Text>
         <TextInput
           style={styles.textInput}
           multiline
@@ -73,8 +77,8 @@ const UserRequests = () => {
           editable={false}
         />
 
-        <Text style={{marginHorizontal:20}}>Статус:</Text>
-        <Text style={{marginHorizontal:20}}>{status}</Text>
+        <Text style={{marginHorizontal:20,fontWeight:'bold',fontSize:18}}>Статус:</Text>
+        <Text style={{marginHorizontal:20,fontSize:18}}>{status}</Text>
           
 
         
@@ -88,7 +92,11 @@ const UserRequests = () => {
         <Text style={styles.header}>Запросы</Text>
       </View>
 
-      {requests.length !== 0 ? (
+      {isLoading ? (
+        <View style={{ height: '83%', justifyContent: 'center', alignItems: 'center',backgroundColor:'#f5f7fc' }}>
+          <ActivityIndicator size="large" color="#4371e6" />
+        </View>
+      ) : requests.length > 0 ? (
       <View style={{ height:'83%'}}>
       
       <FlatList

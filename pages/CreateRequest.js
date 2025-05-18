@@ -6,10 +6,11 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
-  Picker, // если используешь старую версию
   Platform,ImageBackground
 } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
+import * as NavigationBar from 'expo-navigation-bar';
 import UserSession from '../UserSession';
 
 const CreateRequest = () => {
@@ -20,7 +21,7 @@ const CreateRequest = () => {
   const [priority, setPriority] = useState('Отложенный');
 
   const priorities = ['Отложенный', 'Срочный', 'Критический'];
-
+  NavigationBar.setVisibilityAsync("hidden");
   const handleSubmit = async () => {
     if (!problemName || !room || !description) {
       Alert.alert('Ошибка', 'Пожалуйста, заполните все поля');
@@ -29,7 +30,7 @@ const CreateRequest = () => {
 
     try {
       const response = await UserSession.sendAuthorizedRequest(() => ({
-        url: 'https://localhost:7006/send-request', // замените на свой IP
+        url: 'https://localhost:7006/send-request', 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, TextInput, StyleSheet,ImageBackground,Modal,Button } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, TextInput, StyleSheet,ImageBackground,Modal,Button, ActivityIndicator } from 'react-native';
 
 
 import UserSession from '../UserSession';
@@ -13,6 +13,7 @@ const Chats = () => {
   const [inputText, setInputText] = useState('');
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [usersList, setUsersList] = useState([]);
 
   var chatsurl;
@@ -56,6 +57,7 @@ const Chats = () => {
 
   const fetchChats = async () => {
     try {
+      setIsLoading(true);
       const response = await UserSession.sendAuthorizedRequest(() => ({
         url: chatsurl,
         method: 'GET',
@@ -63,7 +65,7 @@ const Chats = () => {
       }));
       const data = await response.json();
       setChats(data);
-       
+      setIsLoading(false);
     } catch (e) {
       console.error('Ошибка загрузки чатов:', e);
     }
@@ -114,6 +116,11 @@ const Chats = () => {
   )}
     </View>
 
+    {isLoading ? (
+        <View style={{ height: '83%', justifyContent: 'center', alignItems: 'center',backgroundColor:'#f5f7fc' }}>
+          <ActivityIndicator size="large" color="#4371e6" />
+        </View>
+      ) : chats.length > 0 ? (
     <View style={{ height:'83%'}}>
     <FlatList
       data={chats}
@@ -129,7 +136,7 @@ const Chats = () => {
         </TouchableOpacity>
       )}
     />
-    </View>
+    </View>) : (<View style={{ height:'83%',justifyContent:'center',alignItems:'center',backgroundColor:'#f5f7fc'}}><Text style={{fontWeight:'bold',fontSize:20}}>На данный момент сообщений нет</Text></View>) }
    
 
   <Modal visible={showCreateDialog} animationType="slide" transparent={true}>

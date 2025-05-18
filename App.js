@@ -11,6 +11,10 @@ import AdminRequests from './pages/AdminRequests';
 import Chats from './pages/Chats';
 import UserSession from './UserSession';
 import Registration from './pages/Registration';
+import ImmersiveMode from 'react-native-immersive-mode';
+import FullScreen from 'react-native-full-screen';
+
+
 import { createNavigationContainerRef } from '@react-navigation/native';
 
 export default function App() {
@@ -18,7 +22,7 @@ export default function App() {
   const navigationRef = createNavigationContainerRef();
   
   const [isNavigationReady, setIsNavigationReady] = useState(false);
-
+  
 useEffect(() => {
   if (isNavigationReady) {
     UserSession.setLogoutCallback(() => {

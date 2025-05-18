@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  View, Text, TouchableOpacity, FlatList, TextInput, StyleSheet, ScrollView,Picker, ImageBackground,CheckBox
+  View, Text, TouchableOpacity, FlatList, TextInput, StyleSheet, ScrollView,Picker, ImageBackground,CheckBox,ActivityIndicator
 } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
@@ -13,6 +13,7 @@ const AdminRequests = () => {
   const [response, setResponse] = useState('');
   const [showDetails, setShowDetails] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
   
   useEffect(() => {
@@ -20,6 +21,7 @@ const AdminRequests = () => {
   }, []);
 
   const fetchRequests = async () => {
+    setIsLoading(true);
     const res = await UserSession.sendAuthorizedRequest(() =>({
       url: 'https://localhost:7006/load-alldata',
       method: 'GET',
@@ -27,6 +29,7 @@ const AdminRequests = () => {
   }));
     const data = await res.json();
     setRequests(data);
+    setIsLoading(false);
   };
 
   const loadRequestDetails = async (reqId) => {
@@ -133,6 +136,11 @@ const AdminRequests = () => {
       <View style={{backgroundColor:'#4371e6',height:'7%',justifyContent:'space-around'}}>
           <Text style={styles.header}>Запросы</Text>
       </View>
+      {isLoading ? (
+          <View style={{ height: '83%', justifyContent: 'center', alignItems: 'center',backgroundColor:'#f5f7fc' }}>
+            <ActivityIndicator size="large" color="#4371e6" />
+          </View>
+      ) : requests.length > 0 ? (
       <View style={{ height:'83%'}}>
       <FlatList
         style={styles.list}
@@ -149,7 +157,8 @@ const AdminRequests = () => {
           </TouchableOpacity>
         )}
       />
-      </View>
+      </View>) : (<View style={{ height:'83%',justifyContent:'center',alignItems:'center',backgroundColor:'#f5f7fc'}}><Text style={{fontWeight:'bold',fontSize:20}}>На данный момент запросов нет</Text></View>) }
+      
       <View style={styles.footer}>
             <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('CreateRequest')} >
               <ImageBackground source={require('../images/CrReqW.png')} style={{width:'100%',height:'100%'}} />
