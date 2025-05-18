@@ -10,6 +10,7 @@ import LoginScreen from './pages/LoginScreen';
 import AdminRequests from './pages/AdminRequests';
 import Chats from './pages/Chats';
 import UserSession from './UserSession';
+import Registration from './pages/Registration';
 import { createNavigationContainerRef } from '@react-navigation/native';
 
 export default function App() {
@@ -41,6 +42,7 @@ useEffect(() => {
         <Stack.Screen name="UserRequests" component={UserRequests} options={{ title: 'Мои заявки' }} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="Chats" component={Chats} />
+        <Stack.Screen name="Registration" component={Registration} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -117,7 +117,7 @@ const Chats = () => {
     <View style={{ height:'83%'}}>
     <FlatList
       data={chats}
-      style={{borderTopWidth:1,backgroundColor:'#f5f7fc'}}
+      style={{backgroundColor:'#f5f7fc'}}
       keyExtractor={(item) => item.chatId.toString()}
       renderItem={({ item }) => (
         <TouchableOpacity style={styles.chatItem} onPress={() => fetchMessages(item.chatId)}>
@@ -178,7 +178,7 @@ const Chats = () => {
               <ImageBackground source={require('../images/Messages.png')} style={{width:'100%',height:'100%'}} />
             </TouchableOpacity>
             <TouchableOpacity  style={styles.footerBtn} onPress={()=>navigation.navigate('Account')}>
-              <ImageBackground source={require('../images/ProfileW.png')} style={{width:'95%',height:'95%'}} />
+              <ImageBackground source={require('../images/ProfileW.png')} style={{width:'100%',height:'100%'}} />
             </TouchableOpacity>
           </View>
     </View>
@@ -186,19 +186,37 @@ const Chats = () => {
 
   const renderMessages = () => (
     <View style={styles.container2}>
+      <View style={{backgroundColor:'#4371e6',height:'7%',alignItems: 'center', justifyContent: 'space-between',flexDirection:'row'}}>
       <TouchableOpacity onPress={() => {setCurrentChatId(null);fetchChats()}}>
-        <Text style={styles.backButton}>← Назад</Text>
+        <Text style={styles.header}>← Назад</Text>
       </TouchableOpacity>
+    </View>
+    <View style={{ height:'85%'}}>
       <FlatList
         data={messages}
         keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={{ paddingVertical: 10 }}
         renderItem={({ item }) => (
-          <View style={styles.messageItem}>
-            <Text style={{ fontWeight: 'bold' }}>{item.senderName}</Text>
-            <Text>{item.content}</Text>
+          <View style={[
+            styles.messageContainer,
+            item.senderName === UserSession.username ? styles.myMessage : styles.otherMessage
+          ]}>
+            {item.senderName !== UserSession.username && (
+              <Text style={styles.senderName}>{item.senderName}</Text>
+            )}
+            <View style={[
+              styles.messageBubble,
+              item.senderName === UserSession.username ? styles.myBubble : styles.otherBubble
+            ]}>
+              <Text style={styles.messageText}>{item.content}</Text>
+            </View>
+            <Text style={[item.senderName === UserSession.username ? styles.myMessageTime : styles.otherMessageTime]}>
+              {new Date(item.sentTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </Text>
           </View>
         )}
       />
+      </View>
       <View style={styles.inputContainer}>
         <TextInput
           value={inputText}
@@ -206,7 +224,7 @@ const Chats = () => {
           style={styles.input}
           placeholder="Введите сообщение"
         />
-        <TouchableOpacity onPress={sendMessage}>
+        <TouchableOpacity style={{backgroundColor:'#4371e6',margin:5,borderRadius:10,justifyContent:'center'}} onPress={sendMessage}>
           <Text style={styles.sendButton}>Отправить</Text>
         </TouchableOpacity>
       </View>
@@ -218,7 +236,7 @@ const Chats = () => {
 
 const styles = StyleSheet.create({
   container1: { flex: 1, paddingTop:0,backgroundColor:'#4371e6' },
-  container2: { flex: 1, padding: 20 },
+  container2: { flex: 1, padding: 0 },
   chatItem: { padding: 15, borderBottomWidth: 1, borderColor: '#ccc' },
   title: {
     fontSize: 18,
@@ -230,22 +248,70 @@ const styles = StyleSheet.create({
   header: { fontSize: 20, fontWeight: 'bold', marginBottom: 0,marginHorizontal:20,color:'#f5f7fc' },
   backButton: { fontSize: 18, marginBottom: 10 },
   messageItem: { padding: 10, borderBottomWidth: 1, borderColor: '#ddd' },
-  inputContainer: { flexDirection: 'row', paddingTop: 10 },
-  input: { flex: 1, borderWidth: 1, borderColor: '#ccc', borderRadius: 5, padding: 5 },
-  sendButton: { paddingHorizontal: 10, justifyContent: 'center', color: 'blue' },
+  inputContainer: { flexDirection: 'row', paddingTop: 0,height:'8%',borderWidth: 1,borderColor: '#ccc' },
+  input: { flex: 1, padding: 5,marginBottom:0 },
+  sendButton: { paddingHorizontal: 10, justifyContent: 'center', color: 'blue',fontWeight:'bold',color:'#f5f7fc',fontSize:10 },
   footer: {
     width:'100%',
     height:'10%',
     flexDirection:'row',
     position: 'absolute',
     bottom:0,
-    backgroundColor: '#4371e6',
+    
   },
   footerBtn:{
     width:'25%',
     height:'100%', 
     backgroundColor: '#4371e6',
     borderWidth:0,
+  },
+  messageContainer: {
+    marginVertical: 4,
+    paddingHorizontal: 12,
+  },
+  myMessage: {
+    alignItems: 'flex-end',
+  },
+  otherMessage: {
+    alignItems: 'flex-start',
+  },
+  messageBubble: {
+    maxWidth: '80%',
+    padding: 12,
+    borderRadius: 12,
+    marginTop: 4,
+  },
+  myBubble: {
+    backgroundColor: '#4371e6',
+    borderBottomRightRadius: 2, // Острый угол справа
+  },
+  otherBubble: {
+    backgroundColor: '#e5e5ea',
+    borderBottomLeftRadius: 2, // Острый угол слева
+  },
+  messageText: {
+    fontSize: 16,
+    color: '#000',
+  },
+  myMessageText: {
+    color: '#fff',
+  },
+  senderName: {
+    fontSize: 12,
+    color: '#666',
+    marginBottom: 2,
+  },
+  myMessageTime: {
+    fontSize: 10,
+    color: '#999',
+    marginTop: 4,
+    alignSelf: 'flex-end',
+  },
+  otherMessageTime: {
+    fontSize: 10,
+    color: '#999',
+    marginTop: 4,
+    alignSelf: 'flex-start',
   },
 });
 

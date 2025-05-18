@@ -44,7 +44,17 @@ const CreateRequest = () => {
 
       if (response.ok) {
         Alert.alert('Успех', 'Запрос успешно отправлен');
-        navigation.goBack();
+        if (UserSession.role === 'Admin') {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'AdminRequests' }],
+            });
+          } else {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'UserRequests' }],
+        });
+      }
       } else {
         const errorText = await response.text();
         console.error('Ошибка запроса:', errorText);
@@ -63,6 +73,7 @@ const CreateRequest = () => {
       </View>
       <Text style={styles.label}>Проблема</Text>
       <TextInput
+        maxLength={30}
         style={styles.input}
         value={problemName}
         onChangeText={setProblemName}
@@ -115,7 +126,7 @@ const CreateRequest = () => {
                 <ImageBackground source={require('../images/MessagesW.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
             </TouchableOpacity>
             <TouchableOpacity  style={styles.footerBtn} onPress={()=>navigation.navigate('Account')}>
-                <ImageBackground source={require('../images/ProfileW.png')} style={{width:'95%',height:'95%'}}></ImageBackground>
+                <ImageBackground source={require('../images/ProfileW.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
             </TouchableOpacity>
         </View>
     </View>
@@ -142,7 +153,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 5,
     backgroundColor: '#fff',
-    marginHorizontal: 20
+    marginHorizontal: 20,
+    
   },
   textArea: {
     borderWidth: 1,
@@ -187,14 +199,17 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     position: 'absolute',
     bottom:0,
-    backgroundColor: '#4371e6',
+    
+    
+    
   },
   footerBtn:{
     width:'25%',
     height:'100%', 
     backgroundColor: '#4371e6',
-    borderColor:'#4371e6',
-    borderWidth:0,
+    
+    borderTopWidth:0,
+    borderColor:'#f5f7fc'
   },
 });
 

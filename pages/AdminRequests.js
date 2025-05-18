@@ -76,22 +76,26 @@ const AdminRequests = () => {
   if (showDetails && selectedRequest) {
     return (
       <ScrollView contentContainerStyle={styles.container}>
-        <TouchableOpacity onPress={() => setShowDetails(false)}>
-          <Text style={styles.backArrow}>← Назад</Text>
-        </TouchableOpacity>
+        <View style={{backgroundColor:'#4371e6',height:'7%',alignItems: 'center', justifyContent: 'space-between',flexDirection:'row'}}>
+            <TouchableOpacity onPress={() => {setShowDetails(false)}}>
+              <Text style={styles.header}>← Назад</Text>
+            </TouchableOpacity>
+            <Text style={styles.header}>Подробности запроса</Text>
+        </View>
 
-        <Text style={styles.header}>Подробности запроса</Text>
-        <Text style={{marginHorizontal:20}}>ID: {selectedRequest.requestId}</Text>
-        <Text style={{marginHorizontal:20}}>От: {selectedRequest.username}</Text>
-        <Text style={{marginHorizontal:20}}>Проблема: {selectedRequest.problemName}</Text>
-        <Text style={{marginHorizontal:20}}>Дата/время: {selectedRequest.reqtime}</Text>
-        <Text style={{marginHorizontal:20}}>Приоритет: {selectedRequest.priorityName}</Text>
-        <Text style={{marginHorizontal:20}}>Помещение: {selectedRequest.room}</Text>
-        <Text style={{marginHorizontal:20}}>Описание:</Text>
+        
+        
+        <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>От: </Text > <Text style={{fontSize:18}}>{selectedRequest.username}</Text></View>
+        <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>Проблема: </Text> <Text style={{fontSize:18}}>{selectedRequest.problemName}</Text></View>
+        <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>Дата/время: </Text> <Text style={{fontSize:18}}>{new Date(selectedRequest.reqtime).toLocaleString()}</Text></View>
+        <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>Приоритет: </Text> <Text style={{fontSize:18}}>{selectedRequest.priorityName}</Text></View>
+        <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>Помещение: </Text> <Text style={{fontSize:18}}>{selectedRequest.room}</Text></View>
+        
+        <Text style={{marginHorizontal:20,fontWeight:'bold',marginTop:10,fontSize:18}}>Описание:</Text>
         <Text style={styles.textBox}>{selectedRequest.description}</Text>
-        <Text style={{marginHorizontal:20}}>Ответ от: {selectedRequest.respusername || '-'}</Text>
+        <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>Ответ от: {selectedRequest.respusername || '-'}</Text></View>
 
-        <Text style={{marginHorizontal:20}}>Ответ:</Text>
+        <Text style={{marginHorizontal:20,fontWeight:'bold',fontSize:18}}>Ответ:</Text>
         <TextInput
           style={styles.textInput}
           multiline
@@ -99,7 +103,7 @@ const AdminRequests = () => {
           onChangeText={setResponse}
         />
 
-        <Text style={{marginHorizontal:20}}>Статус:</Text>
+        <Text style={{marginHorizontal:20,fontWeight:'bold',fontSize:18}}>Статус:</Text>
         <Picker
           selectedValue={status}
           style={styles.picker}
@@ -109,8 +113,8 @@ const AdminRequests = () => {
           <Picker.Item label="В работе" value="В работе" />
           <Picker.Item label="Закрыт" value="Закрыт" />
         </Picker>
-        <View style={{flexDirection:'row',marginHorizontal:20}}>
-        <Text>Создать чат</Text>
+        <View style={{flexDirection:'row',marginHorizontal:20,alignItems:'center'}}>
+        <Text style={{fontSize:18}}>Создать чат</Text>
         <CheckBox 
         style={{marginHorizontal:5}}
         value={isChecked}
@@ -157,7 +161,7 @@ const AdminRequests = () => {
               <ImageBackground source={require('../images/MessagesW.png')} style={{width:'100%',height:'100%'}} />
             </TouchableOpacity>
             <TouchableOpacity  style={styles.footerBtn} onPress={()=>navigation.navigate('Account')}>
-              <ImageBackground source={require('../images/ProfileW.png')} style={{width:'95%',height:'95%'}} />
+              <ImageBackground source={require('../images/ProfileW.png')} style={{width:'100%',height:'100%'}} />
             </TouchableOpacity>
       </View>
     </View>
@@ -200,7 +204,7 @@ const styles = StyleSheet.create({
     marginHorizontal:20
   },
   textBox: {
-    padding: 10,
+    
     backgroundColor: '#f1f1f1',
     borderRadius: 5,
     marginVertical: 10,
@@ -209,7 +213,8 @@ const styles = StyleSheet.create({
   picker: {
     height: 50,
     marginVertical: 10,
-    marginHorizontal:20
+    marginHorizontal:20,
+    borderWidth:1,
   },
   button: {
     backgroundColor: '#4a90e2',
@@ -230,7 +235,7 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     position: 'absolute',
     bottom:0,
-    backgroundColor: '#4371e6',
+    
   },
   footerBtn:{
     width:'25%',

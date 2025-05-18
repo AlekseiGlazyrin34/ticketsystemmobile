@@ -46,11 +46,14 @@ const UserRequests = () => {
   if (showDetails && selectedRequest) {
     return (
       <ScrollView contentContainerStyle={styles.container}>
-        <TouchableOpacity onPress={() => setShowDetails(false)}>
-          <Text style={styles.backArrow}>← Назад</Text>
-        </TouchableOpacity>
+        <View style={{backgroundColor:'#4371e6',height:'7%',alignItems: 'center', justifyContent: 'space-between',flexDirection:'row'}}>
+            <TouchableOpacity onPress={() => {setShowDetails(false)}}>
+              <Text style={styles.header}>← Назад</Text>
+              <Text style={styles.header}>Подробности запроса</Text>
+            </TouchableOpacity>
+        </View>
 
-        <Text style={styles.header}>Подробности запроса</Text>
+        
         <Text style={{marginHorizontal:20}}>ID: {selectedRequest.requestId}</Text>
         <Text style={{marginHorizontal:20}}>От: {selectedRequest.username}</Text>
         <Text style={{marginHorizontal:20}}>Проблема: {selectedRequest.problemName}</Text>
@@ -84,8 +87,10 @@ const UserRequests = () => {
       <View style={{backgroundColor:'#4371e6',height:'7%',justifyContent:'space-around'}}>
         <Text style={styles.header}>Запросы</Text>
       </View>
-      
+
+      {requests.length !== 0 ? (
       <View style={{ height:'83%'}}>
+      
       <FlatList
         style={styles.list}
         data={requests}
@@ -100,9 +105,8 @@ const UserRequests = () => {
             <Text>Дата: {new Date(item.reqtime).toLocaleString()}</Text>
           </TouchableOpacity>
         )}
-      />
+      /></View>) : (<View style={{ height:'83%',justifyContent:'center',alignItems:'center',backgroundColor:'#f5f7fc'}}><Text style={{fontWeight:'bold',fontSize:20}}>На данный момент запросов нет</Text></View>) }
       
-      </View>
       <View style={styles.footer}> 
             <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('CreateRequest')} >
               <ImageBackground source={require('../images/CrReqW.png')} style={{width:'100%',height:'100%'}} />
@@ -114,7 +118,7 @@ const UserRequests = () => {
               <ImageBackground source={require('../images/MessagesW.png')} style={{width:'100%',height:'100%'}} />
             </TouchableOpacity>
             <TouchableOpacity  style={styles.footerBtn} onPress={()=>navigation.navigate('Account')}>
-              <ImageBackground source={require('../images/ProfileW.png')} style={{width:'95%',height:'95%'}} />
+              <ImageBackground source={require('../images/ProfileW.png')} style={{width:'100%',height:'100%'}} />
             </TouchableOpacity>
       </View>
     </View>
@@ -134,7 +138,7 @@ const styles = StyleSheet.create({
   list: {
     backgroundColor: '#f5f7fc',
     marginBottom: 0,
-    borderTopWidth:1,
+    
   },
   listItem: {
     padding: 15,
@@ -187,7 +191,7 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     position: 'absolute',
     bottom:0,
-    backgroundColor: '#4371e6',
+    
   },
   footerBtn:{
     width:'25%',
