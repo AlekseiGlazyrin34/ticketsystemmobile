@@ -23,12 +23,12 @@ const Chats = () => {
     fetchChats();
   }, []);
 
-  if (UserSession.role == 'Admin') chatsurl = 'https://localhost:7006/get-adminchats'
-  else chatsurl = 'https://localhost:7006/get-chats'
+  if (UserSession.role == 'Admin') chatsurl = 'http://192.168.2.62:7006/get-adminchats'
+  else chatsurl = 'http://192.168.2.62:7006/get-chats'
   
   const fetchUsers = async () => {
     const res = await UserSession.sendAuthorizedRequest(() => ({
-      url: 'https://localhost:7006/get-users', // должен вернуть [{userId, username}]
+      url: 'http://192.168.2.62:7006/get-users', 
       method: 'GET',
       headers: {}
     }));
@@ -40,7 +40,7 @@ const Chats = () => {
     if (!selectedUserId) return alert('Выберите пользователя');
   
     await UserSession.sendAuthorizedRequest(() => ({
-      url: `https://localhost:7006/create-chat?userId=${selectedUserId}`,
+      url: `http://192.168.2.62:7006/create-chat?userId=${selectedUserId}`,
       method: 'POST',
       headers: {}
     }));
@@ -74,7 +74,7 @@ const Chats = () => {
   const fetchMessages = async (chatId) => {
     try {
       const response = await UserSession.sendAuthorizedRequest(() => ({
-        url: `https://localhost:7006/get-messages?chatId=${chatId}`,
+        url: `http://192.168.2.62:7006/get-messages?chatId=${chatId}`,
         method: 'GET',
         headers: {}
       }));
@@ -92,7 +92,7 @@ const Chats = () => {
 
     try {
       await UserSession.sendAuthorizedRequest(() => ({
-        url: `https://localhost:7006/send-message`,
+        url: `http://192.168.2.62:7006/send-message`,
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ chatId: currentChatId, content: inputText })
@@ -130,9 +130,14 @@ const Chats = () => {
         <TouchableOpacity style={styles.chatItem} onPress={() => fetchMessages(item.chatId)}>
           <View style={{flexDirection:'row',justifyContent:'space-between'}}>
             <Text style={styles.chatTitle}>{item.userName}</Text>
-            <Text style={{}}>{new Date(item.lastUpdated).toLocaleString()}</Text>
+            
           </View>
-          <Text>{item.lastMessage}</Text>
+          <Text style={{fontWeight:'bold'}}>{item.problemName}</Text>
+          <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+            <Text>{item.lastMessage}</Text>
+            <Text style={{}}>{new Date(item.lastUpdated).toLocaleString()}</Text>
+            
+          </View>
         </TouchableOpacity>
       )}
     />

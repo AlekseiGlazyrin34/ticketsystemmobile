@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  View, Text, TouchableOpacity, FlatList, TextInput, StyleSheet, ScrollView,Picker, ImageBackground, ActivityIndicator
+  View, Text, TouchableOpacity, FlatList, TextInput, StyleSheet, ScrollView, ImageBackground, ActivityIndicator
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import UserSession from '../UserSession'; 
@@ -22,7 +22,7 @@ const UserRequests = () => {
     setIsLoading(true);
     const res = await UserSession.sendAuthorizedRequest(() =>({
       
-      url: 'https://localhost:7006/load-data',
+      url: 'http://192.168.2.62:7006/load-data',
       method: 'GET',
       headers: {}
   }));
@@ -33,7 +33,7 @@ const UserRequests = () => {
 
   const loadRequestDetails = async (reqId) => {
     const res = await UserSession.sendAuthorizedRequest(() =>({
-        url: `https://localhost:7006/loadadd-data?reqid=${reqId}`,
+        url: `http://192.168.2.62:7006/loadadd-data?reqid=${reqId}`,
         method: 'GET',
         headers: {}
       }));

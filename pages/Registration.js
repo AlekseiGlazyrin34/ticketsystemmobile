@@ -19,7 +19,7 @@ const Registration = () => {
 
     try {
         const response= await UserSession.sendAuthorizedRequest(() => ({
-            url:'https://localhost:7006/register', 
+            url:'http://192.168.2.62:7006/register', 
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ const Registration = () => {
       />
 
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
-        <Text style={styles.buttonText}>Зарегистрироваться</Text>
+        <Text style={styles.buttonText}>Зарегистрировать</Text>
       </TouchableOpacity>
     </View>
   );

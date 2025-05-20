@@ -30,7 +30,7 @@ const CreateRequest = () => {
 
     try {
       const response = await UserSession.sendAuthorizedRequest(() => ({
-        url: 'https://localhost:7006/send-request', 
+        url: 'http://192.168.2.62:7006/send-request', 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

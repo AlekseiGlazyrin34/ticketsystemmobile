@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import {
-  View, Text, TouchableOpacity, FlatList, TextInput, StyleSheet, ScrollView,Picker, ImageBackground,CheckBox,ActivityIndicator
+  View, Text, TouchableOpacity, FlatList, TextInput, StyleSheet, ScrollView, ImageBackground,ActivityIndicator
 } from 'react-native';
-
+import { Picker } from '@react-native-picker/picker';
+import { Checkbox } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import UserSession from '../UserSession'; 
 
@@ -23,7 +24,7 @@ const AdminRequests = () => {
   const fetchRequests = async () => {
     setIsLoading(true);
     const res = await UserSession.sendAuthorizedRequest(() =>({
-      url: 'https://localhost:7006/load-alldata',
+      url: 'http://192.168.2.62:7006/load-alldata',
       method: 'GET',
       headers: {}
   }));
@@ -34,7 +35,7 @@ const AdminRequests = () => {
 
   const loadRequestDetails = async (reqId) => {
     const res = await UserSession.sendAuthorizedRequest(() =>({
-        url: `https://localhost:7006/loadadd-data?reqid=${reqId}`,
+        url: `http://192.168.2.62:7006/loadadd-data?reqid=${reqId}`,
         method: 'GET',
         headers: {}
       }));
@@ -51,7 +52,7 @@ const AdminRequests = () => {
   const saveChanges = async () => {
     const res = await UserSession.sendAuthorizedRequest(() =>
       ({
-        url: 'https://localhost:7006/save-changes', 
+        url: 'http://192.168.2.62:7006/save-changes', 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -118,11 +119,13 @@ const AdminRequests = () => {
         </Picker>
         <View style={{flexDirection:'row',marginHorizontal:20,alignItems:'center'}}>
         <Text style={{fontSize:18}}>Создать чат</Text>
-        <CheckBox 
-        style={{marginHorizontal:5}}
-        value={isChecked}
-        onValueChange={setIsChecked}
+
+        <Checkbox
+          status={isChecked ? 'checked' : 'unchecked'}
+          onPress={() => setIsChecked(!isChecked)}
+          color="#4371e6" // Цвет в активном состоянии
         />
+        
         </View>
         <TouchableOpacity style={styles.button} onPress={saveChanges}>
           <Text style={styles.buttonText}>Сохранить изменения</Text>

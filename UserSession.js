@@ -27,7 +27,7 @@ class UserSession {
 
     async refreshAccessToken() {
       try {
-        const response = await fetch('https://localhost:7006/refresh-token', {
+        const response = await fetch('http://192.168.2.62:7006/refresh-token', {
           method: 'POST',
           headers: {
             'Content-Type': 'text/plain',
