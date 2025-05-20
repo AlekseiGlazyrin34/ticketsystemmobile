@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import {
   View, Text, TouchableOpacity, FlatList, TextInput, StyleSheet, ScrollView, ImageBackground, ActivityIndicator
 } from 'react-native';
@@ -58,11 +58,30 @@ const UserRequests = () => {
        </View>
 
         
-        <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>От: </Text > <Text style={{fontSize:18}}>{selectedRequest.username}</Text></View>
-        <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>Проблема: </Text> <Text style={{fontSize:18}}>{selectedRequest.problemName}</Text></View>
-        <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>Дата/время: </Text> <Text style={{fontSize:18}}>{new Date(selectedRequest.reqtime).toLocaleString()}</Text></View>
-        <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>Приоритет: </Text> <Text style={{fontSize:18}}>{selectedRequest.priorityName}</Text></View>
-        <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>Помещение: </Text> <Text style={{fontSize:18}}>{selectedRequest.room}</Text></View>
+         <View style={{marginHorizontal:20, marginTop:10, flexDirection:'row'}}>
+          <Text style={{fontWeight:'bold', fontSize:18}}>От: </Text>
+          <Text style={{fontSize:18}}>{selectedRequest.username }</Text> 
+        </View>
+
+        <View style={{marginHorizontal:20, marginTop:10, flexDirection:'row'}}>
+          <Text style={{fontWeight:'bold', fontSize:18}}>Проблема: </Text>
+          <Text style={{fontSize:18}}>{selectedRequest.problemName}</Text>
+        </View>
+
+        <View style={{marginHorizontal:20, marginTop:10, flexDirection:'row'}}>
+          <Text style={{fontWeight:'bold', fontSize:18}}>Дата/время: </Text>
+          <Text style={{fontSize:18}}>{new Date(selectedRequest.reqtime).toLocaleString()}</Text>
+        </View>
+
+        <View style={{marginHorizontal:20, marginTop:10, flexDirection:'row'}}>
+          <Text style={{fontWeight:'bold', fontSize:18}}>Приоритет: </Text>
+          <Text style={{fontSize:18}}>{selectedRequest.priorityName}</Text>
+        </View>
+
+        <View style={{marginHorizontal:20, marginTop:10, flexDirection:'row'}}>
+          <Text style={{fontWeight:'bold', fontSize:18}}>Помещение: </Text>
+          <Text style={{fontSize:18}}>{selectedRequest.room}</Text>
+        </View>
         
         <Text style={{marginHorizontal:20,fontWeight:'bold',marginTop:10,fontSize:18}}>Описание:</Text>
         <Text style={styles.textBox}>{selectedRequest.description}</Text>

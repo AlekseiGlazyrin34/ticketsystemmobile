@@ -28,7 +28,7 @@ const Chats = () => {
   
   const fetchUsers = async () => {
     const res = await UserSession.sendAuthorizedRequest(() => ({
-      url: 'http://192.168.2.62:7006/get-users', 
+      url: 'http://192.168.2.62:7006/get-admins', 
       method: 'GET',
       headers: {}
     }));
@@ -110,7 +110,7 @@ const Chats = () => {
     <View style={{backgroundColor:'#4371e6',height:'7%',alignItems: 'center', justifyContent: 'space-between',flexDirection:'row'}}>
         <Text style={styles.header}>Сообщения</Text>
          {UserSession.role === 'Admin' && (
-        <TouchableOpacity style={{ width:'30%',height:'33%',backgroundColor:'#f5f7fc',marginHorizontal:20,borderRadius:10}} onPress={openCreateDialog}>
+        <TouchableOpacity style={{ width:'30%',height:'45%',backgroundColor:'#f5f7fc',marginHorizontal:20,borderRadius:10,justifyContent:'center'}} onPress={openCreateDialog}>
           <Text style={{ textAlign: 'center', color: '#4371e6',fontSize: 15, fontWeight: 'bold' }}>Создать чат</Text>
         </TouchableOpacity>
   )}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
   Keyboard,
 } from 'react-native';
 import UserSession from '../UserSession'; // предполагаем, что синглтон сохранён тут
-import * as NavigationBar from 'expo-navigation-bar';
+
 import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = () => {
@@ -17,7 +17,7 @@ const LoginScreen = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
-  NavigationBar.setVisibilityAsync("hidden");
+  
   const handleLogin = async () => {
     Keyboard.dismiss();
 

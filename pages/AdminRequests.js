@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import {
-  View, Text, TouchableOpacity, FlatList, TextInput, StyleSheet, ScrollView, ImageBackground,ActivityIndicator
+  View, Text, TouchableOpacity, FlatList, TextInput, StyleSheet, ScrollView, ImageBackground,ActivityIndicator,Alert
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { Checkbox } from 'react-native-paper';
@@ -15,23 +15,45 @@ const AdminRequests = () => {
   const [showDetails, setShowDetails] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [users, setUsers] = useState([]);
+  const [selectedUserId, setSelectedUserId] = useState(null);
   const navigation = useNavigation();
   
   useEffect(() => {
+    fetchUsers();
     fetchRequests();
   }, []);
 
-  const fetchRequests = async () => {
-    setIsLoading(true);
-    const res = await UserSession.sendAuthorizedRequest(() =>({
-      url: 'http://192.168.2.62:7006/load-alldata',
+ useEffect(() => {
+    fetchRequests(selectedUserId);
+  }, [selectedUserId]);
+
+  const fetchUsers = async () => {
+    const res = await UserSession.sendAuthorizedRequest(() => ({
+      url: 'http://192.168.2.62:7006/get-users',
       method: 'GET',
-      headers: {}
-  }));
+    }));
+    const data = await res.json();
+    setUsers(data);
+  };
+
+   const fetchRequests = async (userId = null) => {
+    setIsLoading(true);
+    const url = userId !== null && userId !== 'Все пользователи'
+      ? `http://192.168.2.62:7006/load-alldata?userId=${userId}`
+      : 'http://192.168.2.62:7006/load-alldata';
+
+    const res = await UserSession.sendAuthorizedRequest(() => ({
+      url,
+      method: 'GET',
+    }));
+
     const data = await res.json();
     setRequests(data);
     setIsLoading(false);
   };
+
+
 
   const loadRequestDetails = async (reqId) => {
     const res = await UserSession.sendAuthorizedRequest(() =>({
@@ -65,7 +87,7 @@ const AdminRequests = () => {
     );
 
     if (res.ok) {
-      alert('Изменения сохранены');
+      Alert.alert('Успех','Изменения сохранены');
       fetchRequests();
       setShowDetails(false);
     } 
@@ -89,11 +111,32 @@ const AdminRequests = () => {
 
         
         
-        <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>От: </Text > <Text style={{fontSize:18}}>{selectedRequest.username}</Text></View>
-        <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>Проблема: </Text> <Text style={{fontSize:18}}>{selectedRequest.problemName}</Text></View>
-        <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>Дата/время: </Text> <Text style={{fontSize:18}}>{new Date(selectedRequest.reqtime).toLocaleString()}</Text></View>
-        <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>Приоритет: </Text> <Text style={{fontSize:18}}>{selectedRequest.priorityName}</Text></View>
-        <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>Помещение: </Text> <Text style={{fontSize:18}}>{selectedRequest.room}</Text></View>
+        <View style={{marginHorizontal:20, marginTop:10, flexDirection:'row'}}>
+          <Text style={{fontWeight:'bold', fontSize:18}}>От: </Text>
+          <Text style={{fontSize:18}}>{selectedRequest.username }</Text> 
+        </View>
+
+        <View style={{marginHorizontal:20, marginTop:10, flexDirection:'row'}}>
+          <Text style={{fontWeight:'bold', fontSize:18}}>Проблема: </Text>
+          <Text style={{fontSize:18}}>{selectedRequest.problemName}</Text>
+        </View>
+
+        <View style={{marginHorizontal:20, marginTop:10, flexDirection:'row'}}>
+          <Text style={{fontWeight:'bold', fontSize:18}}>Дата/время: </Text>
+          <Text style={{fontSize:18}}>{new Date(selectedRequest.reqtime).toLocaleString()}</Text>
+        </View>
+
+        <View style={{marginHorizontal:20, marginTop:10, flexDirection:'row'}}>
+          <Text style={{fontWeight:'bold', fontSize:18}}>Приоритет: </Text>
+          <Text style={{fontSize:18}}>{selectedRequest.priorityName}</Text>
+        </View>
+
+        <View style={{marginHorizontal:20, marginTop:10, flexDirection:'row'}}>
+          <Text style={{fontWeight:'bold', fontSize:18}}>Помещение: </Text>
+          <Text style={{fontSize:18}}>{selectedRequest.room}</Text>
+        </View>
+
+
         
         <Text style={{marginHorizontal:20,fontWeight:'bold',marginTop:10,fontSize:18}}>Описание:</Text>
         <Text style={styles.textBox}>{selectedRequest.description}</Text>
@@ -136,8 +179,18 @@ const AdminRequests = () => {
 
   return (
     <View style={styles.container}>
-      <View style={{backgroundColor:'#4371e6',height:'7%',justifyContent:'space-around'}}>
+      <View style={{backgroundColor:'#4371e6',height:'7%',alignItems: 'center', justifyContent: 'space-between',flexDirection:'row'}}>
           <Text style={styles.header}>Запросы</Text>
+            <View style={styles.pickerContainer}>
+            <Picker
+          selectedValue={selectedUserId}
+          onValueChange={(itemValue) => setSelectedUserId(itemValue)}
+          style={styles.pickerAndroid}>
+          <Picker.Item label="Все пользователи" value={null} />
+          {users.map((user) => (
+            <Picker.Item key={user.userId} label={user.username} value={user.userId} />
+          ))}
+        </Picker></View>
       </View>
       {isLoading ? (
           <View style={{ height: '83%', justifyContent: 'center', alignItems: 'center',backgroundColor:'#f5f7fc' }}>
@@ -194,6 +247,22 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 0,
     
+  },
+  pickerAndroid: {
+    
+    width: '100%',
+    marginHorizontal: 0
+  },
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    marginTop: 0,
+    backgroundColor: '#fff',
+    marginHorizontal: 20,
+    width:'50%',
+    height:'60%',
+    justifyContent:'center'
   },
   listItem: {
     padding: 15,

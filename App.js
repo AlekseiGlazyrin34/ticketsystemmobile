@@ -1,5 +1,4 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -11,9 +10,7 @@ import AdminRequests from './pages/AdminRequests';
 import Chats from './pages/Chats';
 import UserSession from './UserSession';
 import Registration from './pages/Registration';
-import ImmersiveMode from 'react-native-immersive-mode';
-import FullScreen from 'react-native-full-screen';
-
+import { StatusBar } from 'react-native';
 
 import { createNavigationContainerRef } from '@react-navigation/native';
 
@@ -24,6 +21,7 @@ export default function App() {
   const [isNavigationReady, setIsNavigationReady] = useState(false);
   
 useEffect(() => {
+  StatusBar.setHidden(true);
   if (isNavigationReady) {
     UserSession.setLogoutCallback(() => {
       navigationRef.reset({

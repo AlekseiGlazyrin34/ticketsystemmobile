@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
-import * as NavigationBar from 'expo-navigation-bar';
+
 import UserSession from '../UserSession';
 
 const CreateRequest = () => {
@@ -21,7 +21,7 @@ const CreateRequest = () => {
   const [priority, setPriority] = useState('Отложенный');
 
   const priorities = ['Отложенный', 'Срочный', 'Критический'];
-  NavigationBar.setVisibilityAsync("hidden");
+ 
   const handleSubmit = async () => {
     if (!problemName || !room || !description) {
       Alert.alert('Ошибка', 'Пожалуйста, заполните все поля');
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
   pickerAndroid: {
     height: 50,
     width: '100%',
-    marginHorizontal: 20
+    marginHorizontal: 0
   },
   button: {
     marginTop: 20,
