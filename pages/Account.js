@@ -1,43 +1,37 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground,Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import UserSession from '../UserSession';
 const Account = () => {
   const navigation = useNavigation();
-  
-  // Здесь ты можешь получать данные пользователя, например, через глобальное состояние или контекст
   const user = {
     username: UserSession.username,    // UserSession.Instance.Username
     jobTitle: UserSession.jobTitle,        // UserSession.Instance.JobtTitle
     role: UserSession.role,       // UserSession.Instance.Role
     login: UserSession.login,            // UserSession.Instance.Login
   };
-
   const handleLogout = () => {
-    // Очистить сессию пользователя (например, удалить токены)
+    // Очистить сессию пользователя
     // Навигация на экран авторизации
     console.log('Нажата кнопка выхода');
-    //Alert.alert('Выход', 'Вы уверены, что хотите выйти?', [
-      //{ text: 'Отмена', style: 'cancel' },
-      //{ text: 'Выйти', style: 'destructive', 
-        //onPress: () => {
-          // Здесь очистить сохраненные токены или userData
+    Alert.alert('Выход', 'Вы уверены, что хотите выйти?', [
+      { text: 'Отмена', style: 'cancel' },
+      { text: 'Выйти', style: 'destructive', 
+        onPress: () => {
+          // очистить сохраненные токены или userData
           UserSession.clear();
           navigation.reset({
             index: 0,
             routes: [{ name: 'LoginScreen' }], // Имя экрана входа
           });
         }
-      //}
-    //]);
-  //};
-
+      }
+    ]);
+  };
   return (
     <View style={styles.container}>
       <View style={{backgroundColor:'#4371e6',height:'7%',width:'100%',justifyContent:'space-around'}}>
           <Text style={styles.header}>Учетная запись</Text>
       </View>
-
       <View style={styles.infoBox}>
         <Text style={styles.infoText}>ФИО: {user.username}</Text>
         <Text style={styles.infoText}>Должность: {user.jobTitle}</Text>
@@ -47,7 +41,6 @@ const Account = () => {
       {UserSession.role === 'Admin' && (<TouchableOpacity style={[styles.logoutButton,{backgroundColor: '#109c35',borderColor: '#19e04e'}]} onPress={()=>navigation.navigate('Registration')}>
         <Text style={styles.logoutButtonText}>Добавить пользователя</Text>
       </TouchableOpacity>)}
-      
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutButtonText}>Выйти из системы</Text>
       </TouchableOpacity>
@@ -71,12 +64,10 @@ const Account = () => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 0,
-    
     alignItems:'center',
     backgroundColor:'#f5f7fc',
   },
@@ -89,10 +80,8 @@ const styles = StyleSheet.create({
   infoBox: {
     backgroundColor: '#f5f7fc',
     width: '100%',
-    
     padding: 20,
     marginBottom: 10,
-    
   },
   infoText: {
     fontSize: 16,
@@ -111,16 +100,13 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
-    
   },
   footer: {
     width:'100%',
     height:'10%',
     flexDirection:'row',
     position: 'absolute',
-    
-    bottom:0,
-    
+    bottom:0,  
   },
   footerBtn:{
     width:'25%',
@@ -129,5 +115,4 @@ const styles = StyleSheet.create({
     borderWidth:0,
   },
 });
-
 export default Account;

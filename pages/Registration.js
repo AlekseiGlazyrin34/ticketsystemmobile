@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import UserSession from '../UserSession';
-
 const Registration = () => {
   const [username, setUsername] = useState('');
   const [login, setLogin] = useState('');
@@ -10,13 +9,11 @@ const Registration = () => {
   const [jobId, setJobId] = useState('');
   const [roleId, setRoleId] = useState('');
   const navigation = useNavigation();
-
   const handleRegister = async () => {
     if (!username || !login || !password || !jobId || !roleId) {
       Alert.alert('Ошибка', 'Все поля обязательны для заполнения');
       return;
     }
-
     try {
         const response= await UserSession.sendAuthorizedRequest(() => ({
             url:'http://192.168.2.62:7006/register', 
@@ -32,9 +29,7 @@ const Registration = () => {
             roleId: parseInt(roleId)
             }),
         }));
-
       const data = await response.json();
-
       if (response.ok) {
         Alert.alert('Успех', 'Регистрация прошла успешно');
         navigation.goBack();
@@ -46,18 +41,15 @@ const Registration = () => {
       console.error(error);
     }
   };
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Регистрация</Text>
-      
       <TextInput
         style={styles.input}
         placeholder="Имя пользователя"
         value={username}
         onChangeText={setUsername}
       />
-      
       <TextInput
         style={styles.input}
         placeholder="Логин"
@@ -65,7 +57,6 @@ const Registration = () => {
         onChangeText={setLogin}
         autoCapitalize="none"
       />
-      
       <TextInput
         style={styles.input}
         placeholder="Пароль"
@@ -73,7 +64,6 @@ const Registration = () => {
         onChangeText={setPassword}
         secureTextEntry
       />
-      
       <TextInput
         style={styles.input}
         placeholder="ID должности"
@@ -81,7 +71,6 @@ const Registration = () => {
         onChangeText={setJobId}
         keyboardType="numeric"
       />
-      
       <TextInput
         style={styles.input}
         placeholder="ID роли"
@@ -89,14 +78,12 @@ const Registration = () => {
         onChangeText={setRoleId}
         keyboardType="numeric"
       />
-
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>Зарегистрировать</Text>
       </TouchableOpacity>
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -130,5 +117,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   }
 });
-
 export default Registration;

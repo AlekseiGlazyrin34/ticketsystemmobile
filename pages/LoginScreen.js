@@ -1,50 +1,33 @@
 import  { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-  Keyboard,
-} from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Keyboard,} from 'react-native';
 import UserSession from '../UserSession'; // предполагаем, что синглтон сохранён тут
-
 import { useNavigation } from '@react-navigation/native';
-
 const LoginScreen = () => {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
-  
   const handleLogin = async () => {
     Keyboard.dismiss();
-
     if (!login || !password) {
       setError('Поля должны быть заполнены');
       return;
     }
-
     setLoading(true);
     setError('');
-
     const data = {
       Login: login,
       Password: password,
     };
-
     try {
-      
       const response = await fetch('http://192.168.2.62:7006/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
-        
       });
-
       if (response.ok) {
         setError('ОК');
         const respData = await response.json();
@@ -56,7 +39,6 @@ const LoginScreen = () => {
         UserSession.accessToken = respData.token;
         UserSession.refreshToken = respData.refreshToken;
         UserSession.userId = parseInt(respData.userId);
-        
         if (UserSession.role === 'Admin') {
         navigation.reset({
           index: 0,
@@ -78,10 +60,8 @@ const LoginScreen = () => {
       console.log(e);
       setError('Не удалось установить соединение с сервером');
     }
-
     setLoading(false);
   };
-
   return (
     <View style={styles.container}>
       <TextInput
@@ -104,9 +84,7 @@ const LoginScreen = () => {
     </View>
   );
 };
-
 export default LoginScreen;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

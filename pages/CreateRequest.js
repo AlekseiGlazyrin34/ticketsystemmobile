@@ -1,33 +1,21 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-  Alert,
-  Platform,ImageBackground
-} from 'react-native';
+  View,  Text, TextInput, StyleSheet, TouchableOpacity, Alert, Platform,ImageBackground} from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
-
 import UserSession from '../UserSession';
-
 const CreateRequest = () => {
   const navigation = useNavigation();
   const [problemName, setProblemName] = useState('');
   const [room, setRoom] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('Отложенный');
-
   const priorities = ['Отложенный', 'Срочный', 'Критический'];
- 
   const handleSubmit = async () => {
     if (!problemName || !room || !description) {
       Alert.alert('Ошибка', 'Пожалуйста, заполните все поля');
       return;
     }
-
     try {
       const response = await UserSession.sendAuthorizedRequest(() => ({
         url: 'http://192.168.2.62:7006/send-request', 
@@ -42,7 +30,6 @@ const CreateRequest = () => {
           description,
         }),
       }));
-
       if (response.ok) {
         Alert.alert('Успех', 'Запрос успешно отправлен');
         if (UserSession.role === 'Admin') {
@@ -66,7 +53,6 @@ const CreateRequest = () => {
       Alert.alert('Ошибка', 'Произошла ошибка при отправке запроса');
     }
   };
-
   return (
     <View style={styles.container}>
       <View style={{backgroundColor:'#4371e6',height:'7%',justifyContent:'space-around'}}>
@@ -79,14 +65,12 @@ const CreateRequest = () => {
         value={problemName}
         onChangeText={setProblemName}
       />
-
       <Text style={styles.label}>Помещение</Text>
       <TextInput
         style={styles.input}
         value={room}
         onChangeText={setRoom}
       />
-
       <Text style={styles.label}>Описание</Text>
       <TextInput
         style={styles.textArea}
@@ -95,7 +79,6 @@ const CreateRequest = () => {
         value={description}
         onChangeText={setDescription}
       />
-
       <Text style={styles.label}>Приоритет</Text>
       <View style={styles.pickerContainer}>
         <Picker
@@ -108,7 +91,6 @@ const CreateRequest = () => {
           ))}
         </Picker>
       </View>
-
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Создать запрос</Text>
       </TouchableOpacity>
@@ -133,7 +115,6 @@ const CreateRequest = () => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     padding: 0,
@@ -192,7 +173,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
-    
   },
   footer: {
     width:'100%',
@@ -200,20 +180,15 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     position: 'absolute',
     bottom:0,
-    
-    
-    
   },
   footerBtn:{
     width:'25%',
     height:'100%', 
     backgroundColor: '#4371e6',
-    
     borderTopWidth:0,
     borderColor:'#f5f7fc'
   },
 });
-
 export default CreateRequest;
 
   

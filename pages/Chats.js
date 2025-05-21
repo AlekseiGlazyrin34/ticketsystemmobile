@@ -1,11 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, TextInput, StyleSheet,ImageBackground,Modal,Button, ActivityIndicator } from 'react-native';
-
-
 import UserSession from '../UserSession';
 import { useNavigation } from '@react-navigation/native';
-
-
 const Chats = () => {
   const [chats, setChats] = useState([]);
   const [messages, setMessages] = useState([]);
@@ -15,17 +11,13 @@ const Chats = () => {
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [usersList, setUsersList] = useState([]);
-
   var chatsurl;
   const navigation = useNavigation();
-
   useEffect(() => {
     fetchChats();
   }, []);
-
   if (UserSession.role == 'Admin') chatsurl = 'http://192.168.2.62:7006/get-adminchats'
   else chatsurl = 'http://192.168.2.62:7006/get-chats'
-  
   const fetchUsers = async () => {
     const res = await UserSession.sendAuthorizedRequest(() => ({
       url: 'http://192.168.2.62:7006/get-admins', 
@@ -35,26 +27,20 @@ const Chats = () => {
     const data = await res.json();
     setUsersList(data);
   };
-
   const createChat = async () => {
     if (!selectedUserId) return alert('Выберите пользователя');
-  
     await UserSession.sendAuthorizedRequest(() => ({
       url: `http://192.168.2.62:7006/create-chat?userId=${selectedUserId}`,
       method: 'POST',
       headers: {}
     }));
-
     setShowCreateDialog(false);
     fetchChats();
   };
-
   const openCreateDialog = async () => {
     await fetchUsers();
     setShowCreateDialog(true);
   };
-
-
   const fetchChats = async () => {
     try {
       setIsLoading(true);
@@ -70,7 +56,6 @@ const Chats = () => {
       console.error('Ошибка загрузки чатов:', e);
     }
   };
-
   const fetchMessages = async (chatId) => {
     try {
       const response = await UserSession.sendAuthorizedRequest(() => ({
@@ -81,15 +66,12 @@ const Chats = () => {
       const data = await response.json();
       setMessages(data);
       setCurrentChatId(chatId);
-
     } catch (e) {
       console.error('Ошибка загрузки сообщений:', e);
     }
   };
-
   const sendMessage = async () => {
     if (!inputText) return;
-
     try {
       await UserSession.sendAuthorizedRequest(() => ({
         url: `http://192.168.2.62:7006/send-message`,
@@ -104,7 +86,6 @@ const Chats = () => {
       console.error('Ошибка отправки сообщения:', e);
     }
   };
-
   const renderChatList = () => (
     <View style={styles.container1}>
     <View style={{backgroundColor:'#4371e6',height:'7%',alignItems: 'center', justifyContent: 'space-between',flexDirection:'row'}}>
@@ -115,7 +96,6 @@ const Chats = () => {
         </TouchableOpacity>
   )}
     </View>
-
     {isLoading ? (
         <View style={{ height: '83%', justifyContent: 'center', alignItems: 'center',backgroundColor:'#f5f7fc' }}>
           <ActivityIndicator size="large" color="#4371e6" />
@@ -129,21 +109,17 @@ const Chats = () => {
       renderItem={({ item }) => (
         <TouchableOpacity style={styles.chatItem} onPress={() => fetchMessages(item.chatId)}>
           <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-            <Text style={styles.chatTitle}>{item.userName}</Text>
-            
+            <Text style={styles.chatTitle}>{item.userName}</Text> 
           </View>
           <Text style={{fontWeight:'bold'}}>{item.problemName}</Text>
           <View style={{flexDirection:'row',justifyContent:'space-between'}}>
             <Text>{item.lastMessage}</Text>
             <Text style={{}}>{new Date(item.lastUpdated).toLocaleString()}</Text>
-            
           </View>
         </TouchableOpacity>
       )}
     />
     </View>) : (<View style={{ height:'83%',justifyContent:'center',alignItems:'center',backgroundColor:'#f5f7fc'}}><Text style={{fontWeight:'bold',fontSize:20}}>На данный момент сообщений нет</Text></View>) }
-   
-
   <Modal visible={showCreateDialog} animationType="slide" transparent={true}>
   <View style={{ flex: 1, backgroundColor: '#000000aa', justifyContent: 'center' }}>
     <View style={{ backgroundColor: 'white', margin: 20, padding: 20, borderRadius: 10 }}>
@@ -166,8 +142,6 @@ const Chats = () => {
           </TouchableOpacity>
         )}
       />
-
-
       <View style={{ flexDirection: 'row', justifyContent: 'space-between',marginTop: 15 }}>
         <Button title="Создать" onPress={createChat} />
         <Button title="Отмена" onPress={() => setShowCreateDialog(false)} />
@@ -175,7 +149,6 @@ const Chats = () => {
     </View>
   </View>
 </Modal>
-
     <View style={styles.footer}>
             <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('CreateRequest')} >
               <ImageBackground source={require('../images/CrReqW.png')} style={{width:'100%',height:'100%'}} />
@@ -195,7 +168,6 @@ const Chats = () => {
           </View>
     </View>
   );
-
   const renderMessages = () => (
     <View style={styles.container2}>
       <View style={{backgroundColor:'#4371e6',height:'7%',alignItems: 'center', justifyContent: 'space-between',flexDirection:'row'}}>
@@ -242,10 +214,8 @@ const Chats = () => {
       </View>
     </View>
   );
-
   return currentChatId ? renderMessages() : renderChatList();
 };
-
 const styles = StyleSheet.create({
   container1: { flex: 1, paddingTop:0,backgroundColor:'#4371e6' },
   container2: { flex: 1, padding: 0 },
@@ -269,7 +239,6 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     position: 'absolute',
     bottom:0,
-    
   },
   footerBtn:{
     width:'25%',
@@ -326,5 +295,4 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
 });
-
 export default Chats;

@@ -1,5 +1,5 @@
 import  { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CreateRequest from './pages/CreateRequest';
@@ -11,15 +11,11 @@ import Chats from './pages/Chats';
 import UserSession from './UserSession';
 import Registration from './pages/Registration';
 import { StatusBar } from 'react-native';
-
 import { createNavigationContainerRef } from '@react-navigation/native';
-
 export default function App() {
   const Stack = createNativeStackNavigator();
   const navigationRef = createNavigationContainerRef();
-  
   const [isNavigationReady, setIsNavigationReady] = useState(false);
-  
 useEffect(() => {
   StatusBar.setHidden(true);
   if (isNavigationReady) {
@@ -31,9 +27,6 @@ useEffect(() => {
     });
   }
 }, [isNavigationReady]);
-  
-
-  
   return (
     <NavigationContainer ref={navigationRef}
     onReady={() => setIsNavigationReady(true)}>
@@ -48,9 +41,7 @@ useEffect(() => {
       </Stack.Navigator>
     </NavigationContainer>
   );
-  
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

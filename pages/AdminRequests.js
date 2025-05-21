@@ -1,12 +1,9 @@
 import  { useEffect, useState } from 'react';
-import {
-  View, Text, TouchableOpacity, FlatList, TextInput, StyleSheet, ScrollView, ImageBackground,ActivityIndicator,Alert
-} from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, TextInput, StyleSheet, ScrollView, ImageBackground,ActivityIndicator,Alert} from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { Checkbox } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import UserSession from '../UserSession'; 
-
 const AdminRequests = () => {
   const [requests, setRequests] = useState([]);
   const [selectedRequest, setSelectedRequest] = useState(null);
@@ -18,16 +15,13 @@ const AdminRequests = () => {
   const [users, setUsers] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const navigation = useNavigation();
-  
   useEffect(() => {
     fetchUsers();
     fetchRequests();
   }, []);
-
  useEffect(() => {
     fetchRequests(selectedUserId);
   }, [selectedUserId]);
-
   const fetchUsers = async () => {
     const res = await UserSession.sendAuthorizedRequest(() => ({
       url: 'http://192.168.2.62:7006/get-users',
@@ -36,41 +30,32 @@ const AdminRequests = () => {
     const data = await res.json();
     setUsers(data);
   };
-
    const fetchRequests = async (userId = null) => {
     setIsLoading(true);
     const url = userId !== null && userId !== 'Все пользователи'
       ? `http://192.168.2.62:7006/load-alldata?userId=${userId}`
       : 'http://192.168.2.62:7006/load-alldata';
-
     const res = await UserSession.sendAuthorizedRequest(() => ({
       url,
       method: 'GET',
     }));
-
     const data = await res.json();
     setRequests(data);
     setIsLoading(false);
   };
-
-
-
   const loadRequestDetails = async (reqId) => {
     const res = await UserSession.sendAuthorizedRequest(() =>({
         url: `http://192.168.2.62:7006/loadadd-data?reqid=${reqId}`,
         method: 'GET',
         headers: {}
       }));
-   
     const data = await res.json();
     const req = data[0];
-
     setSelectedRequest(req);
     setStatus(req.statusName);
     setResponse(req.responseContent || '');
     setShowDetails(true);
   };
-
   const saveChanges = async () => {
     const res = await UserSession.sendAuthorizedRequest(() =>
       ({
@@ -85,7 +70,6 @@ const AdminRequests = () => {
         })
       })
     );
-
     if (res.ok) {
       Alert.alert('Успех','Изменения сохранены');
       fetchRequests();
@@ -98,7 +82,6 @@ const AdminRequests = () => {
       alert('Ошибка при сохранении');
     }
   };
-
   if (showDetails && selectedRequest) {
     return (
       <ScrollView contentContainerStyle={styles.container}>
@@ -108,40 +91,29 @@ const AdminRequests = () => {
             </TouchableOpacity>
             <Text style={styles.header}>Подробности запроса</Text>
         </View>
-
-        
-        
         <View style={{marginHorizontal:20, marginTop:10, flexDirection:'row'}}>
           <Text style={{fontWeight:'bold', fontSize:18}}>От: </Text>
           <Text style={{fontSize:18}}>{selectedRequest.username }</Text> 
         </View>
-
         <View style={{marginHorizontal:20, marginTop:10, flexDirection:'row'}}>
           <Text style={{fontWeight:'bold', fontSize:18}}>Проблема: </Text>
           <Text style={{fontSize:18}}>{selectedRequest.problemName}</Text>
         </View>
-
         <View style={{marginHorizontal:20, marginTop:10, flexDirection:'row'}}>
           <Text style={{fontWeight:'bold', fontSize:18}}>Дата/время: </Text>
           <Text style={{fontSize:18}}>{new Date(selectedRequest.reqtime).toLocaleString()}</Text>
         </View>
-
         <View style={{marginHorizontal:20, marginTop:10, flexDirection:'row'}}>
           <Text style={{fontWeight:'bold', fontSize:18}}>Приоритет: </Text>
           <Text style={{fontSize:18}}>{selectedRequest.priorityName}</Text>
         </View>
-
         <View style={{marginHorizontal:20, marginTop:10, flexDirection:'row'}}>
           <Text style={{fontWeight:'bold', fontSize:18}}>Помещение: </Text>
           <Text style={{fontSize:18}}>{selectedRequest.room}</Text>
         </View>
-
-
-        
         <Text style={{marginHorizontal:20,fontWeight:'bold',marginTop:10,fontSize:18}}>Описание:</Text>
         <Text style={styles.textBox}>{selectedRequest.description}</Text>
         <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>Ответ от: {selectedRequest.respusername || '-'}</Text></View>
-
         <Text style={{marginHorizontal:20,fontWeight:'bold',fontSize:18}}>Ответ:</Text>
         <TextInput
           style={styles.textInput}
@@ -149,7 +121,6 @@ const AdminRequests = () => {
           value={response}
           onChangeText={setResponse}
         />
-
         <Text style={{marginHorizontal:20,fontWeight:'bold',fontSize:18}}>Статус:</Text>
         <Picker
           selectedValue={status}
@@ -162,13 +133,11 @@ const AdminRequests = () => {
         </Picker>
         <View style={{flexDirection:'row',marginHorizontal:20,alignItems:'center'}}>
         <Text style={{fontSize:18}}>Создать чат</Text>
-
         <Checkbox
           status={isChecked ? 'checked' : 'unchecked'}
           onPress={() => setIsChecked(!isChecked)}
           color="#4371e6" // Цвет в активном состоянии
         />
-        
         </View>
         <TouchableOpacity style={styles.button} onPress={saveChanges}>
           <Text style={styles.buttonText}>Сохранить изменения</Text>
@@ -176,7 +145,6 @@ const AdminRequests = () => {
       </ScrollView>
     );
   }
-
   return (
     <View style={styles.container}>
       <View style={{backgroundColor:'#4371e6',height:'7%',alignItems: 'center', justifyContent: 'space-between',flexDirection:'row'}}>
@@ -214,7 +182,6 @@ const AdminRequests = () => {
         )}
       />
       </View>) : (<View style={{ height:'83%',justifyContent:'center',alignItems:'center',backgroundColor:'#f5f7fc'}}><Text style={{fontWeight:'bold',fontSize:20}}>На данный момент запросов нет</Text></View>) }
-      
       <View style={styles.footer}>
             <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('CreateRequest')} >
               <ImageBackground source={require('../images/CrReqW.png')} style={{width:'100%',height:'100%'}} />
@@ -232,9 +199,7 @@ const AdminRequests = () => {
     </View>
   );
 };
-
 export default AdminRequests;
-
 const styles = StyleSheet.create({
   container: { 
     flex: 1,
@@ -246,10 +211,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f7fc',
     borderRadius: 10,
     marginBottom: 0,
-    
   },
   pickerAndroid: {
-    
     width: '100%',
     marginHorizontal: 0
   },
@@ -268,7 +231,6 @@ const styles = StyleSheet.create({
     padding: 15,
     borderBottomWidth: 1,
     borderColor: '#ccc',
-
   },
   backArrow: {
     fontSize: 18,
@@ -284,8 +246,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     marginHorizontal:20
   },
-  textBox: {
-    
+  textBox: { 
     backgroundColor: '#f1f1f1',
     borderRadius: 5,
     marginVertical: 10,
@@ -316,7 +277,6 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     position: 'absolute',
     bottom:0,
-    
   },
   footerBtn:{
     width:'25%',
