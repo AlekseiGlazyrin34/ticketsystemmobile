@@ -129,25 +129,25 @@ const AdminRequests = () => {
           <Text style={{fontWeight:'bold', fontSize:18}}>От: </Text>
           <Text style={{fontSize:18}}>{selectedRequest.username }</Text> 
         </View>
-        <View style={{marginHorizontal:20, marginTop:10, flexDirection:'row'}}>
+        <View style={{marginHorizontal:20, marginTop:5, flexDirection:'row'}}>
           <Text style={{fontWeight:'bold', fontSize:18}}>Проблема: </Text>
           <Text style={{fontSize:18}}>{selectedRequest.problemName}</Text>
         </View>
-        <View style={{marginHorizontal:20, marginTop:10, flexDirection:'row'}}>
+        <View style={{marginHorizontal:20, marginTop:5, flexDirection:'row'}}>
           <Text style={{fontWeight:'bold', fontSize:18}}>Дата/время: </Text>
           <Text style={{fontSize:18}}>{new Date(selectedRequest.reqtime).toLocaleString()}</Text>
         </View>
-        <View style={{marginHorizontal:20, marginTop:10, flexDirection:'row'}}>
+        <View style={{marginHorizontal:20, marginTop:5, flexDirection:'row'}}>
           <Text style={{fontWeight:'bold', fontSize:18}}>Приоритет: </Text>
           <Text style={{fontSize:18}}>{selectedRequest.priorityName}</Text>
         </View>
-        <View style={{marginHorizontal:20, marginTop:10, flexDirection:'row'}}>
+        <View style={{marginHorizontal:20, marginTop:5, flexDirection:'row'}}>
           <Text style={{fontWeight:'bold', fontSize:18}}>Помещение: </Text>
           <Text style={{fontSize:18}}>{selectedRequest.room}</Text>
         </View>
-        <Text style={{marginHorizontal:20,fontWeight:'bold',marginTop:10,fontSize:18}}>Описание:</Text>
+        <Text style={{marginHorizontal:20,fontWeight:'bold',marginTop:5,fontSize:18}}>Описание:</Text>
         <Text style={styles.textBox}>{selectedRequest.description}</Text>
-        <View style={{marginHorizontal:20,marginTop:10,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>Ответ от: {selectedRequest.respusername || '-'}</Text></View>
+        <View style={{marginHorizontal:20,marginTop:5,flexDirection:'row'}}><Text style={{fontWeight:'bold',fontSize:18}}>Ответ от: {selectedRequest.respusername || '-'}</Text></View>
         <Text style={{marginHorizontal:20,fontWeight:'bold',fontSize:18}}>Ответ:</Text>
         <TextInput
           style={styles.textInput}
@@ -156,15 +156,16 @@ const AdminRequests = () => {
           onChangeText={setResponse}
         />
         <Text style={{marginHorizontal:20,fontWeight:'bold',fontSize:18}}>Статус:</Text>
+        <View style={styles.pickerContainer2}>
         <Picker
           selectedValue={status}
-          style={styles.picker}
           onValueChange={(itemValue) => setStatus(itemValue)}
         >
           <Picker.Item label="Новый" value="Новый" />
           <Picker.Item label="В работе" value="В работе" />
           <Picker.Item label="Закрыт" value="Закрыт" />
         </Picker>
+        </View>
         <View style={{flexDirection:'row',marginHorizontal:20,alignItems:'center'}}>
         <Text style={{fontSize:18}}>Создать чат</Text>
         <Checkbox
@@ -272,6 +273,17 @@ const styles = StyleSheet.create({
     height:'60%',
     justifyContent:'center'
   },
+  pickerContainer2: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    marginVertical: 5,
+    backgroundColor: '#fff',
+    marginHorizontal: 20,
+    width:'90%',
+    height:40,
+    justifyContent:'center'
+  },
   listItem: {
     padding: 15,
     borderBottomWidth: 1,
@@ -288,7 +300,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     padding: 10,
     minHeight: 80,
-    marginVertical: 10,
+    marginVertical: 5,
     marginHorizontal:20
   },
   textBox: { 
@@ -296,12 +308,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginVertical: 10,
     marginHorizontal:20
-  },
-  picker: {
-    height: 50,
-    marginVertical: 10,
-    marginHorizontal:20,
-    borderWidth:1,
   },
   button: {
     backgroundColor: '#4a90e2',
