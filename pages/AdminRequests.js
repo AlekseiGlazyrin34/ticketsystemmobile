@@ -1,8 +1,10 @@
 import  { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList, TextInput, StyleSheet, ScrollView, ImageBackground,ActivityIndicator,Alert} from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, TextInput, StyleSheet, ScrollView, ImageBackground,ActivityIndicator,Alert,Image} from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { Checkbox } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
+import * as FileSystem from 'expo-file-system';
+import * as MediaLibrary from 'expo-media-library';
 import UserSession from '../UserSession'; 
 const AdminRequests = () => {
   const [requests, setRequests] = useState([]);
@@ -51,9 +53,13 @@ const AdminRequests = () => {
       }));
     const data = await res.json();
     const req = data[0];
+    
     setSelectedRequest(req);
     setStatus(req.statusName);
     setResponse(req.responseContent || '');
+    if (req.imageBase64) {
+      req.imageUri = `data:image/jpeg;base64,${req.imageBase64}`;
+    }
     setShowDetails(true);
   };
   const saveChanges = async () => {
@@ -82,6 +88,34 @@ const AdminRequests = () => {
       alert('Ошибка при сохранении');
     }
   };
+
+  const saveBase64ToGallery = async (base64Data) => {
+  const { status } = await MediaLibrary.requestPermissionsAsync();
+  if (status !== 'granted') {
+    Alert.alert('Ошибка', 'Нет разрешения на сохранение изображений');
+    return;
+  }
+
+  try {
+    const fileUri = FileSystem.cacheDirectory + `request_image_${Date.now()}.jpg`;
+
+    // Сохраняем base64 в файл
+    await FileSystem.writeAsStringAsync(fileUri, base64Data, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+
+    // Сохраняем файл в галерею
+    const asset = await MediaLibrary.createAssetAsync(fileUri);
+    await MediaLibrary.createAlbumAsync('TicketSystem', asset, false);
+
+    Alert.alert('Успешно', 'Изображение сохранено в галерею');
+  } catch (err) {
+    console.error('Ошибка сохранения:', err);
+    Alert.alert('Ошибка', 'Не удалось сохранить изображение');
+  }
+};
+
+
   if (showDetails && selectedRequest) {
     return (
       <ScrollView contentContainerStyle={styles.container}>
@@ -139,6 +173,17 @@ const AdminRequests = () => {
           color="#4371e6" // Цвет в активном состоянии
         />
         </View>
+
+        {selectedRequest.imageUri && (
+          <TouchableOpacity onPress={() => saveBase64ToGallery(selectedRequest.imageBase64)}>
+          <Image
+            source={{ uri: selectedRequest.imageUri }}
+            style={{ width: 200, height: 200, marginTop: 10, borderWidth: 1, alignSelf:'center' }}
+            resizeMode="contain"
+          />
+          </TouchableOpacity>
+        )}
+
         <TouchableOpacity style={styles.button} onPress={saveChanges}>
           <Text style={styles.buttonText}>Сохранить изменения</Text>
         </TouchableOpacity>

@@ -1,6 +1,8 @@
 import  { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList, TextInput, StyleSheet, ScrollView, ImageBackground, ActivityIndicator} from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, TextInput, StyleSheet, ScrollView, ImageBackground, ActivityIndicator,Image,Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import * as FileSystem from 'expo-file-system';
+import * as MediaLibrary from 'expo-media-library';
 import UserSession from '../UserSession'; 
 const UserRequests = () => {
   const [requests, setRequests] = useState([]);
@@ -35,8 +37,38 @@ const UserRequests = () => {
     setSelectedRequest(req);
     setStatus(req.statusName);
     setResponse(req.responseContent || '');
+    if (req.imageBase64) {
+      req.imageUri = `data:image/jpeg;base64,${req.imageBase64}`;
+    }
     setShowDetails(true);
   };
+
+  const saveBase64ToGallery = async (base64Data) => {
+    const { status } = await MediaLibrary.requestPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Ошибка', 'Нет разрешения на сохранение изображений');
+      return;
+    }
+
+    try {
+      const fileUri = FileSystem.cacheDirectory + `request_image_${Date.now()}.jpg`;
+
+      // Сохраняем base64 в файл
+      await FileSystem.writeAsStringAsync(fileUri, base64Data, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      // Сохраняем файл в галерею
+      const asset = await MediaLibrary.createAssetAsync(fileUri);
+      await MediaLibrary.createAlbumAsync('TicketSystem', asset, false);
+
+      Alert.alert('Успешно', 'Изображение сохранено в галерею');
+    } catch (err) {
+      console.error('Ошибка сохранения:', err);
+      Alert.alert('Ошибка', 'Не удалось сохранить изображение');
+    }
+  };
+
   if (showDetails && selectedRequest) {
     return (
       <ScrollView contentContainerStyle={styles.container}>
@@ -79,6 +111,15 @@ const UserRequests = () => {
         />
         <Text style={{marginHorizontal:20,fontWeight:'bold',fontSize:18}}>Статус:</Text>
         <Text style={{marginHorizontal:20,fontSize:18}}>{status}</Text>
+        {selectedRequest.imageUri && (
+          <TouchableOpacity onPress={() => saveBase64ToGallery(selectedRequest.imageBase64)}>
+          <Image
+            source={{ uri: selectedRequest.imageUri }}
+            style={{ width: 200, height: 200, marginTop: 10, borderWidth: 1, alignSelf:'center' }}
+            resizeMode="contain"
+          />
+          </TouchableOpacity>
+        )}
       </ScrollView>
     );
   }

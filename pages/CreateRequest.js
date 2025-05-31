@@ -3,7 +3,12 @@ import {
   View,  Text, TextInput, StyleSheet, TouchableOpacity, Alert, Platform,ImageBackground} from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
+
+import * as ImagePicker from 'expo-image-picker';
+import { Image } from 'react-native';
+
 import UserSession from '../UserSession';
+
 const CreateRequest = () => {
   const navigation = useNavigation();
   const [problemName, setProblemName] = useState('');
@@ -11,6 +16,33 @@ const CreateRequest = () => {
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('Отложенный');
   const priorities = ['Отложенный', 'Срочный', 'Критический'];
+  const [image, setImage] = useState(null);
+
+  const pickImage = async () => {
+    // Запрос разрешения
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Требуется разрешение на доступ к галерее');
+      return;
+    }
+
+    // Открытие выбора изображения
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      base64: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage({
+      uri: result.assets[0].uri,         // для отображения картинки в <Image>
+      base64: result.assets[0].base64,   // для отправки на сервер
+    });
+      // result.assets[0].base64 — изображение в виде строки для сохранения в БД
+    }
+  };
+
   const handleSubmit = async () => {
     if (!problemName || !room || !description) {
       Alert.alert('Ошибка', 'Пожалуйста, заполните все поля');
@@ -28,6 +60,7 @@ const CreateRequest = () => {
           room,
           priority: priority,
           description,
+          image:image?.base64 || null
         }),
       }));
       if (response.ok) {
@@ -91,6 +124,14 @@ const CreateRequest = () => {
           ))}
         </Picker>
       </View>
+
+      
+      <TouchableOpacity style={styles.imageButton} title="Выбрать изображение" onPress={pickImage}>
+        <Text style={styles.buttonText}>Выбрать изображение</Text>
+      </TouchableOpacity>
+      {image && <Image source={{ uri: image.uri }} style={{ width: 200, height: 200,borderWidth:1,alignSelf:'center' }} />}
+        
+
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Создать запрос</Text>
       </TouchableOpacity>
@@ -162,8 +203,18 @@ const styles = StyleSheet.create({
     marginHorizontal: 0
   },
   button: {
-    marginTop: 20,
+    marginTop: 10,
     backgroundColor: '#109c35',
+    padding: 12,
+    borderRadius: 5,
+    borderColor: '#19e04e',
+    alignItems: 'center',
+    marginHorizontal: 20
+  },
+  imageButton: {
+    marginTop: 10,
+    marginBottom: 10,
+    backgroundColor: '#4371e6',
     padding: 12,
     borderRadius: 5,
     borderColor: '#19e04e',
