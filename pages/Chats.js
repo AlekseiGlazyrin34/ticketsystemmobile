@@ -193,6 +193,7 @@ const Chats = () => {
               item.senderName === UserSession.username ? styles.myBubble : styles.otherBubble
             ]}>
               <Text style={styles.messageText}>{item.content}</Text>
+
             </View>
             <Text style={[item.senderName === UserSession.username ? styles.myMessageTime : styles.otherMessageTime]}>
               {new Date(item.sentTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}

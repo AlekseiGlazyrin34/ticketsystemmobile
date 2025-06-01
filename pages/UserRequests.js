@@ -1,5 +1,5 @@
 import  { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList, TextInput, StyleSheet, ScrollView, ImageBackground, ActivityIndicator,Image,Alert} from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, TextInput, StyleSheet, ScrollView, ImageBackground, ActivityIndicator,Image,Alert,Modal,Button} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
@@ -11,6 +11,8 @@ const UserRequests = () => {
   const [response, setResponse] = useState('');
   const [showDetails, setShowDetails] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [selectedImage,selectImage] = useState(null);
   const navigation = useNavigation();
   useEffect(() => {
     fetchRequests();
@@ -37,8 +39,11 @@ const UserRequests = () => {
     setSelectedRequest(req);
     setStatus(req.statusName);
     setResponse(req.responseContent || '');
-    if (req.imageBase64) {
-      req.imageUri = `data:image/jpeg;base64,${req.imageBase64}`;
+    if (req.imageBase641) {
+      req.imageUri1 = `data:image/jpeg;base64,${req.imageBase641}`;
+    }
+    if (req.imageBase642) {
+      req.imageUri2 = `data:image/jpeg;base64,${req.imageBase642}`;
     }
     setShowDetails(true);
   };
@@ -110,16 +115,37 @@ const UserRequests = () => {
           editable={false}
         />
         <Text style={{marginHorizontal:20,fontWeight:'bold',fontSize:18}}>Статус:</Text>
-        <Text style={{marginHorizontal:20,fontSize:18}}>{status}</Text>
-        {selectedRequest.imageUri && (
-          <TouchableOpacity onPress={() => saveBase64ToGallery(selectedRequest.imageBase64)}>
+        <Text style={{marginHorizontal:20,fontSize:18,marginBottom:10}}>{status}</Text>
+
+        <View style={{flexDirection:'row',justifyContent:'space-between',marginHorizontal:20}}> 
+        {selectedRequest.imageUri1 && (
+          <TouchableOpacity style={{ width:'47%', height: 190,borderWidth:1,alignSelf:'center' }} onPress={() => {selectImage(selectedRequest.imageBase641);setShowCreateDialog(true)}}>
           <Image
-            source={{ uri: selectedRequest.imageUri }}
-            style={{ width: 200, height: 200, marginTop: 10, borderWidth: 1, alignSelf:'center' }}
-            resizeMode="contain"
+            source={{ uri: selectedRequest.imageUri1 }}
+            style={{ width:'100%',height:'100%'}}
+            resizeMode="stretch"
           />
           </TouchableOpacity>
         )}
+        {selectedRequest.imageUri2 && (
+          <TouchableOpacity style={{ width:'47%', height: 190,borderWidth:1,alignSelf:'center' }} onPress={() => {selectImage(selectedRequest.imageBase642);setShowCreateDialog(true)}}>
+          <Image
+            source={{ uri: selectedRequest.imageUri2 }}
+            style={{ width:'100%',height:'100%'}}
+            resizeMode="stretch"
+          />
+          </TouchableOpacity>
+        )}
+        </View>
+        {selectedImage && <Modal visible={showCreateDialog} animationType="slide" transparent={true}>
+          <View style={{ flex: 1, backgroundColor: '#000000aa', justifyContent: 'center' }}>
+                <Image source={{ uri: `data:image/jpeg;base64,${selectedImage}` }} style={{ width:'80%', height: '70%',borderWidth:1,alignSelf:'center' }} />
+              <View style={{ flexDirection: 'row', justifyContent: 'space-around',marginTop: 15 }}>
+                <Button title="Скачать" onPress={() =>saveBase64ToGallery(selectedImage)} />
+                <Button title="Назад" onPress={() => setShowCreateDialog(false)} />
+              </View>
+            </View>
+        </Modal>}
       </ScrollView>
     );
   }
