@@ -8,7 +8,7 @@ import Account from './pages/Account';
 import LoginScreen from './pages/LoginScreen';
 import AdminRequests from './pages/AdminRequests';
 import Chats from './pages/Chats';
-import UserSession from './UserSession';
+import UserSession from './UserSession'; //Данне о сессии
 import Registration from './pages/Registration';
 import { StatusBar } from 'react-native';
 import { createNavigationContainerRef } from '@react-navigation/native';
@@ -30,18 +30,19 @@ useEffect(() => {
   return (
     <NavigationContainer ref={navigationRef}
     onReady={() => setIsNavigationReady(true)}>
-      <Stack.Navigator initialRouteName="LoginScreen" screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="CreateRequest" component={CreateRequest} />
-        <Stack.Screen name="Account" component={Account} />
-        <Stack.Screen name="AdminRequests" component={AdminRequests} options={{ title: 'Заявки (Админ)' }} />
-        <Stack.Screen name="UserRequests" component={UserRequests} options={{ title: 'Мои заявки' }} />
-        <Stack.Screen name="LoginScreen" component={LoginScreen} />
-        <Stack.Screen name="Chats" component={Chats} />
-        <Stack.Screen name="Registration" component={Registration} />
+      <Stack.Navigator initialRouteName="LoginScreen" screenOptions={{ headerShown: false }}/*Страница логина*/>
+        <Stack.Screen name="CreateRequest" component={CreateRequest} /*Страница создания запроса*//>
+        <Stack.Screen name="Account" component={Account} /*Страница учетной записи*//>
+        <Stack.Screen name="AdminRequests" component={AdminRequests} options={{ title: 'Заявки (Админ)' }} /*Страница запросов администратора*//>
+        <Stack.Screen name="UserRequests" component={UserRequests} options={{ title: 'Мои заявки' }} /*Страница запросов пользователя*//>
+        <Stack.Screen name="LoginScreen" component={LoginScreen} /*Страница логина*//>
+        <Stack.Screen name="Chats" component={Chats} /*Страница чатов*//>
+        <Stack.Screen name="Registration" component={Registration} /*Страница регистрации*//>
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+//Стили
 const styles = StyleSheet.create({
   container: {
     flex: 1,

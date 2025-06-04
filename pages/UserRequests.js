@@ -4,7 +4,9 @@ import { useNavigation } from '@react-navigation/native';
 import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
 import UserSession from '../UserSession'; 
+// Основной компонент для отображения запросов пользователя
 const UserRequests = () => {
+  // Состояния компонента
   const [requests, setRequests] = useState([]);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [status, setStatus] = useState('');
@@ -14,10 +16,10 @@ const UserRequests = () => {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [selectedImage,selectImage] = useState(null);
   const navigation = useNavigation();
-  useEffect(() => {
+  useEffect(() => { // Эффект для загрузки запросов при монтировании компонента
     fetchRequests();
   }, []);
-  const fetchRequests = async () => {
+  const fetchRequests = async () => { // Функция загрузки запросов с сервера
     setIsLoading(true);
     const res = await UserSession.sendAuthorizedRequest(() =>({
       url: 'http://192.168.2.62:7006/load-data',
@@ -28,7 +30,7 @@ const UserRequests = () => {
     setRequests(data);
     setIsLoading(false);
   };
-  const loadRequestDetails = async (reqId) => {
+  const loadRequestDetails = async (reqId) => { // Загрузка деталей конкретного запроса
     const res = await UserSession.sendAuthorizedRequest(() =>({
         url: `http://192.168.2.62:7006/loadadd-data?reqid=${reqId}`,
         method: 'GET',
@@ -36,10 +38,10 @@ const UserRequests = () => {
       }));
     const data = await res.json();
     const req = data[0];
-    setSelectedRequest(req);
+    setSelectedRequest(req);// Обновление состояния с данными запроса
     setStatus(req.statusName);
     setResponse(req.responseContent || '');
-    if (req.imageBase641) {
+    if (req.imageBase641) { // Преобразование base64 в URI для изображений
       req.imageUri1 = `data:image/jpeg;base64,${req.imageBase641}`;
     }
     if (req.imageBase642) {
@@ -47,41 +49,36 @@ const UserRequests = () => {
     }
     setShowDetails(true);
   };
-
-  const saveBase64ToGallery = async (base64Data) => {
+  const saveBase64ToGallery = async (base64Data) => {  // Сохранение изображения в галерею
     const { status } = await MediaLibrary.requestPermissionsAsync();
-    if (status !== 'granted') {
+    if (status !== 'granted') { // Запрос разрешения на доступ к медиатеке
       Alert.alert('Ошибка', 'Нет разрешения на сохранение изображений');
       return;
     }
-
     try {
-      const fileUri = FileSystem.cacheDirectory + `request_image_${Date.now()}.jpg`;
-
+      const fileUri = FileSystem.cacheDirectory + `request_image_${Date.now()}.jpg`; // Создание временного файла
       // Сохраняем base64 в файл
       await FileSystem.writeAsStringAsync(fileUri, base64Data, {
         encoding: FileSystem.EncodingType.Base64,
       });
-
       // Сохраняем файл в галерею
       const asset = await MediaLibrary.createAssetAsync(fileUri);
       await MediaLibrary.createAlbumAsync('TicketSystem', asset, false);
-
       Alert.alert('Успешно', 'Изображение сохранено в галерею');
     } catch (err) {
       console.error('Ошибка сохранения:', err);
       Alert.alert('Ошибка', 'Не удалось сохранить изображение');
     }
   };
-
+// Рендер экрана с деталями запроса
   if (showDetails && selectedRequest) {
     return (
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={styles.container} >
        <View style={{backgroundColor:'#4371e6',height:'7%',alignItems: 'center', justifyContent: 'space-between',flexDirection:'row'}}>
-          <TouchableOpacity onPress={() => {setShowDetails(false)}}>
+          <TouchableOpacity onPress={() => {setShowDetails(false)}} /* Шапка с кнопкой назад */>
             <Text style={styles.header}>← Назад</Text>
           </TouchableOpacity>
-          <Text style={styles.header}>Подробности запроса</Text>
+          <Text style={styles.header} /* Информация о запросе */>Подробности запроса</Text>
        </View>
          <View style={{marginHorizontal:20, marginTop:10, flexDirection:'row'}}>
           <Text style={{fontWeight:'bold', fontSize:18}}>От: </Text>
@@ -116,9 +113,8 @@ const UserRequests = () => {
         />
         <Text style={{marginHorizontal:20,fontWeight:'bold',fontSize:18}}>Статус:</Text>
         <Text style={{marginHorizontal:20,fontSize:18,marginBottom:10}}>{status}</Text>
-
         <View style={{flexDirection:'row',justifyContent:'space-between',marginHorizontal:20}}> 
-        {selectedRequest.imageUri1 && (
+        {selectedRequest.imageUri1 && ( /* Модальное окно для просмотра изображения */
           <TouchableOpacity style={{ width:'47%', height: 190,borderWidth:1,alignSelf:'center' }} onPress={() => {selectImage(selectedRequest.imageBase641);setShowCreateDialog(true)}}>
           <Image
             source={{ uri: selectedRequest.imageUri1 }}
@@ -149,16 +145,16 @@ const UserRequests = () => {
       </ScrollView>
     );
   }
-  return (
+  return ( // Рендер основного экрана со списком запросов
     <View style={styles.container}>
       <View style={{backgroundColor:'#4371e6',height:'7%',justifyContent:'space-around'}}>
         <Text style={styles.header}>Запросы</Text>
       </View>
-      {isLoading ? (
+      {isLoading ? (/* Индикатор загрузки */
         <View style={{ height: '83%', justifyContent: 'center', alignItems: 'center',backgroundColor:'#f5f7fc' }}>
           <ActivityIndicator size="large" color="#4371e6" />
         </View>
-      ) : requests.length > 0 ? (
+      ) : requests.length > 0 ? ( // Список запросов
       <View style={{ height:'83%'}}>
       <FlatList
         style={styles.list}
@@ -174,8 +170,8 @@ const UserRequests = () => {
             <Text>Дата: {new Date(item.reqtime).toLocaleString()}</Text>
           </TouchableOpacity>
         )}
-      /></View>) : (<View style={{ height:'83%',justifyContent:'center',alignItems:'center',backgroundColor:'#f5f7fc'}}><Text style={{fontWeight:'bold',fontSize:20}}>На данный момент запросов нет</Text></View>) }
-      <View style={styles.footer}> 
+      /></View>) : ( <View style={{ height:'83%',justifyContent:'center',alignItems:'center',backgroundColor:'#f5f7fc'}}><Text style={{fontWeight:'bold',fontSize:20}}>На данный момент запросов нет</Text></View>) }
+      <View style={styles.footer} /* Нижнее меню навигации */> 
             <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('CreateRequest')} >
               <ImageBackground source={require('../images/CrReqW.png')} style={{width:'100%',height:'100%'}} />
             </TouchableOpacity>
@@ -193,6 +189,7 @@ const UserRequests = () => {
   );
 };
 export default UserRequests;
+// Стили компонента
 const styles = StyleSheet.create({
   container: { 
     flex: 1,

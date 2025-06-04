@@ -7,9 +7,8 @@ import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from 'expo-image-picker';
 import { Image } from 'react-native';
-
 import UserSession from '../UserSession';
-
+// Основной компонент для создания нового запроса
 const CreateRequest = () => {
   const navigation = useNavigation();
   const [problemName, setProblemName] = useState('');
@@ -21,7 +20,6 @@ const CreateRequest = () => {
   const [image2, setImage2] = useState(null);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [selectedImage,selectImage] = useState(null);
-
   const pickImage1 = async () => {
     // Запрос разрешения
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -29,7 +27,6 @@ const CreateRequest = () => {
       alert('Требуется разрешение на доступ к галерее');
       return;
     }
-
     // Открытие выбора изображения
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -37,7 +34,6 @@ const CreateRequest = () => {
       base64: true,
       quality: 1,
     });
-
     if (!result.canceled) {
       setImage1({
       uri: result.assets[0].uri,         // для отображения картинки в <Image>
@@ -46,7 +42,6 @@ const CreateRequest = () => {
       // result.assets[0].base64 — изображение в виде строки для сохранения в БД
     }
   };
-
 const pickImage2 = async () => {
     // Запрос разрешения
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -54,7 +49,6 @@ const pickImage2 = async () => {
       alert('Требуется разрешение на доступ к галерее');
       return;
     }
-
     // Открытие выбора изображения
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -62,7 +56,6 @@ const pickImage2 = async () => {
       base64: true,
       quality: 1,
     });
-
     if (!result.canceled) {
       setImage2({
       uri: result.assets[0].uri,         // для отображения картинки в <Image>
@@ -71,13 +64,14 @@ const pickImage2 = async () => {
       // result.assets[0].base64 — изображение в виде строки для сохранения в БД
     }
   };
-
   const handleSubmit = async () => {
+    // Проверка заполнения обязательных полей
     if (!problemName || !room || !description) {
       Alert.alert('Ошибка', 'Пожалуйста, заполните все поля');
       return;
     }
     try {
+      // Отправка данных на сервер
       const response = await UserSession.sendAuthorizedRequest(() => ({
         url: 'http://192.168.2.62:7006/send-request', 
         method: 'POST',
@@ -93,7 +87,7 @@ const pickImage2 = async () => {
           image2:image2?.base64 || null
         }),
       }));
-
+      // Обработка ответа от сервера
       if (response.ok) {
         Alert.alert('Успех', 'Запрос успешно отправлен');
         if (UserSession.role === 'Admin') {
@@ -117,7 +111,6 @@ const pickImage2 = async () => {
       Alert.alert('Ошибка', 'Произошла ошибка при отправке запроса');
     }
   };
-
   const saveBase64ToGallery = async (base64Data) => {
       const { status } = await MediaLibrary.requestPermissionsAsync();
       if (status !== 'granted') {
@@ -125,7 +118,6 @@ const pickImage2 = async () => {
         Alert.alert('Ошибка', 'Нет разрешения на сохранение изображений');
         return;
       }
-  
       try {
         const fileUri = FileSystem.cacheDirectory + `request_image_${Date.now()}.jpg`;
   
@@ -133,7 +125,6 @@ const pickImage2 = async () => {
         await FileSystem.writeAsStringAsync(fileUri, base64Data, {
           encoding: FileSystem.EncodingType.Base64,
         });
-  
         // Сохраняем файл в галерею
         const asset = await MediaLibrary.createAssetAsync(fileUri);
         await MediaLibrary.createAlbumAsync('TicketSystem', asset, false);
@@ -144,7 +135,6 @@ const pickImage2 = async () => {
         Alert.alert('Ошибка', 'Не удалось сохранить изображение');
       }
     };
-    
   return (
     <View style={styles.container}>
       <View style={{backgroundColor:'#4371e6',height:'7%',justifyContent:'space-around'}}>
@@ -183,7 +173,6 @@ const pickImage2 = async () => {
           ))}
         </Picker>
       </View>
-
       <View style={{flexDirection:'row',justifyContent:'space-between',marginHorizontal:20}}>
       <TouchableOpacity style={styles.imageButton1} title="Выбрать изображение" onPress={pickImage1}>
         <Text style={styles.buttonText}>Выбрать изображение</Text>
@@ -200,11 +189,9 @@ const pickImage2 = async () => {
          <Image source={{ uri: image2.uri }} style={{ width:'100%',height:'100%' }} />
         </TouchableOpacity>}
       </View> 
-
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Создать запрос</Text>
       </TouchableOpacity>
-      
       {selectedImage && <Modal visible={showCreateDialog} animationType="slide" transparent={true}>
         <View style={{ flex: 1, backgroundColor: '#000000aa', justifyContent: 'center' }}>
              <Image source={{ uri: selectedImage.uri }} style={{ width:'80%', height: '70%',borderWidth:1,alignSelf:'center' }} />
@@ -214,7 +201,6 @@ const pickImage2 = async () => {
             </View>
           </View>
       </Modal>}
-
       <View style={styles.footer}>
             <TouchableOpacity style={[styles.footerBtn,{backgroundColor:'#f5f7fc'}]}  disabled={true}>
                 <ImageBackground source={require('../images/CrReq.png')} style={{width:'100%',height:'100%'}}></ImageBackground>

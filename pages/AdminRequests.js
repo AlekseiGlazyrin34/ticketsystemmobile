@@ -26,7 +26,7 @@ const AdminRequests = () => {
  useEffect(() => {
     fetchRequests(selectedUserId);
   }, [selectedUserId]);
-  const fetchUsers = async () => {
+  const fetchUsers = async () => { //запросить пользователей
     const res = await UserSession.sendAuthorizedRequest(() => ({
       url: 'http://192.168.2.62:7006/get-users',
       method: 'GET',
@@ -37,8 +37,8 @@ const AdminRequests = () => {
    const fetchRequests = async (userId = null) => {
     setIsLoading(true);
     const url = userId !== null && userId !== 'Все пользователи'
-      ? `http://192.168.2.62:7006/load-alldata?userId=${userId}`
-      : 'http://192.168.2.62:7006/load-alldata';
+      ? `http://192.168.2.62:7006/load-alldata?userId=${userId}` //запросить запросы конкретного пользователя
+      : 'http://192.168.2.62:7006/load-alldata'; //запросить запросы всех пользователей
     const res = await UserSession.sendAuthorizedRequest(() => ({
       url,
       method: 'GET',
@@ -49,13 +49,12 @@ const AdminRequests = () => {
   };
   const loadRequestDetails = async (reqId) => {
     const res = await UserSession.sendAuthorizedRequest(() =>({
-        url: `http://192.168.2.62:7006/loadadd-data?reqid=${reqId}`,
+        url: `http://192.168.2.62:7006/loadadd-data?reqid=${reqId}`, //запросить данне о конкретном запросе
         method: 'GET',
         headers: {}
       }));
     const data = await res.json();
     const req = data[0];
-    
     setSelectedRequest(req);
     setStatus(req.statusName);
     setResponse(req.responseContent || '');
@@ -70,7 +69,7 @@ const AdminRequests = () => {
   const saveChanges = async () => {
     const res = await UserSession.sendAuthorizedRequest(() =>
       ({
-        url: 'http://192.168.2.62:7006/save-changes', 
+        url: 'http://192.168.2.62:7006/save-changes', //сохранить изменения для запроса
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -93,42 +92,35 @@ const AdminRequests = () => {
       alert('Ошибка при сохранении');
     }
   };
-
-  const saveBase64ToGallery = async (base64Data) => {
+  const saveBase64ToGallery = async (base64Data) => { //преобразование картинки из base64 для сохранения
   const { status } = await MediaLibrary.requestPermissionsAsync();
   if (status !== 'granted') {
     Alert.alert('Ошибка', 'Нет разрешения на сохранение изображений');
     return;
   }
-
   try {
     const fileUri = FileSystem.cacheDirectory + `request_image_${Date.now()}.jpg`;
-
     // Сохраняем base64 в файл
     await FileSystem.writeAsStringAsync(fileUri, base64Data, {
       encoding: FileSystem.EncodingType.Base64,
     });
-
     // Сохраняем файл в галерею
     const asset = await MediaLibrary.createAssetAsync(fileUri);
     await MediaLibrary.createAlbumAsync('TicketSystem', asset, false);
-
     Alert.alert('Успешно', 'Изображение сохранено в галерею');
   } catch (err) {
     console.error('Ошибка сохранения:', err);
     Alert.alert('Ошибка', 'Не удалось сохранить изображение');
   }
 };
-
-
-  if (showDetails && selectedRequest) {
+  if (showDetails && selectedRequest) { //показывать конкретный запрос
     return (
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}/*Подробности запроса*/> 
         <View style={{backgroundColor:'#4371e6',height:'7%',alignItems: 'center', justifyContent: 'space-between',flexDirection:'row'}}>
             <TouchableOpacity onPress={() => {setShowDetails(false)}}>
               <Text style={styles.header}>← Назад</Text>
             </TouchableOpacity>
-            <Text style={styles.header}>Подробности запроса</Text>
+            <Text style={styles.header}>Подробности запроса</Text> 
         </View>
         <View style={{marginHorizontal:20, marginTop:10, flexDirection:'row'}}>
           <Text style={{fontWeight:'bold', fontSize:18}}>От: </Text>
@@ -166,7 +158,7 @@ const AdminRequests = () => {
           selectedValue={status}
           onValueChange={(itemValue) => setStatus(itemValue)}
         >
-          <Picker.Item label="Новый" value="Новый" />
+          <Picker.Item label="Новый" value="Новый" /*Выбор статуса запроса*//> 
           <Picker.Item label="В работе" value="В работе" />
           <Picker.Item label="Закрыт" value="Закрыт" />
         </Picker>
@@ -175,11 +167,10 @@ const AdminRequests = () => {
         <Text style={{fontSize:18}}>Создать чат</Text>
         <Checkbox
           status={isChecked ? 'checked' : 'unchecked'}
-          onPress={() => setIsChecked(!isChecked)}
+          onPress={() => setIsChecked(!isChecked)} 
           color="#4371e6" // Цвет в активном состоянии
         />
         </View>
-
        <View style={{flexDirection:'row',justifyContent:'space-between',marginHorizontal:20}}> 
         {selectedRequest.imageUri1 && (
           <TouchableOpacity style={{ width:'47%', height: 190,borderWidth:1,alignSelf:'center' }} onPress={() => {selectImage(selectedRequest.imageBase641);setShowCreateDialog(true)}}>
@@ -205,7 +196,7 @@ const AdminRequests = () => {
           <Text style={styles.buttonText}>Сохранить изменения</Text>
         </TouchableOpacity>
 
-      {selectedImage && <Modal visible={showCreateDialog} animationType="slide" transparent={true}>
+      {selectedImage && <Modal visible={showCreateDialog} animationType="slide" transparent={true}/*модальное окно для показа изображения*/> 
           <View style={{ flex: 1, backgroundColor: '#000000aa', justifyContent: 'center' }}>
                 <Image source={{ uri: `data:image/jpeg;base64,${selectedImage}` }} style={{ width:'80%', height: '70%',borderWidth:1,alignSelf:'center' }} />
               <View style={{ flexDirection: 'row', justifyContent: 'space-around',marginTop: 15 }}>
@@ -217,7 +208,7 @@ const AdminRequests = () => {
       </ScrollView>
     );
   }
-  return (
+  return ( //список всех запросов
     <View style={styles.container}>
       <View style={{backgroundColor:'#4371e6',height:'7%',alignItems: 'center', justifyContent: 'space-between',flexDirection:'row'}}>
           <Text style={styles.header}>Запросы</Text>
@@ -232,7 +223,7 @@ const AdminRequests = () => {
           ))}
         </Picker></View>
       </View>
-      {isLoading ? (
+      {isLoading ? ( //анимация загрузки
           <View style={{ height: '83%', justifyContent: 'center', alignItems: 'center',backgroundColor:'#f5f7fc' }}>
             <ActivityIndicator size="large" color="#4371e6" />
           </View>
@@ -255,16 +246,16 @@ const AdminRequests = () => {
       />
       </View>) : (<View style={{ height:'83%',justifyContent:'center',alignItems:'center',backgroundColor:'#f5f7fc'}}><Text style={{fontWeight:'bold',fontSize:20}}>На данный момент запросов нет</Text></View>) }
       <View style={styles.footer}>
-            <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('CreateRequest')} >
+            <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('CreateRequest')} /*Кнопка создания запроса*/>
               <ImageBackground source={require('../images/CrReqW.png')} style={{width:'100%',height:'100%'}} />
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.footerBtn,{backgroundColor:'#f5f7fc'}]} disabled={true}>
+            <TouchableOpacity style={[styles.footerBtn,{backgroundColor:'#f5f7fc'}]} disabled={true}/*Кнопка просмотра запросов для пользователя*/>
               <ImageBackground source={require('../images/List.png')} style={{width:'100%',height:'100%'}} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('Chats')}>
+            <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('Chats')}/*Кнопка просмотра чатов*/>
               <ImageBackground source={require('../images/MessagesW.png')} style={{width:'100%',height:'100%'}} />
             </TouchableOpacity>
-            <TouchableOpacity  style={styles.footerBtn} onPress={()=>navigation.navigate('Account')}>
+            <TouchableOpacity  style={styles.footerBtn} onPress={()=>navigation.navigate('Account')}/*Кнопка страницы учетной записи*/>
               <ImageBackground source={require('../images/ProfileW.png')} style={{width:'100%',height:'100%'}} />
             </TouchableOpacity>
       </View>

@@ -16,11 +16,11 @@ const Chats = () => {
   useEffect(() => {
     fetchChats();
   }, []);
-  if (UserSession.role == 'Admin') chatsurl = 'http://192.168.2.62:7006/get-adminchats'
-  else chatsurl = 'http://192.168.2.62:7006/get-chats'
+  if (UserSession.role == 'Admin') chatsurl = 'http://192.168.2.62:7006/get-adminchats' //запрос чатов админа
+  else chatsurl = 'http://192.168.2.62:7006/get-chats' //запрос чатов апользователя
   const fetchUsers = async () => {
     const res = await UserSession.sendAuthorizedRequest(() => ({
-      url: 'http://192.168.2.62:7006/get-admins', 
+      url: 'http://192.168.2.62:7006/get-admins',  //запрос списка админов
       method: 'GET',
       headers: {}
     }));
@@ -30,7 +30,7 @@ const Chats = () => {
   const createChat = async () => {
     if (!selectedUserId) return alert('Выберите пользователя');
     await UserSession.sendAuthorizedRequest(() => ({
-      url: `http://192.168.2.62:7006/create-chat?userId=${selectedUserId}`,
+      url: `http://192.168.2.62:7006/create-chat?userId=${selectedUserId}`, //создание чата с другим админом
       method: 'POST',
       headers: {}
     }));
@@ -59,44 +59,45 @@ const Chats = () => {
   const fetchMessages = async (chatId) => {
     try {
       const response = await UserSession.sendAuthorizedRequest(() => ({
-        url: `http://192.168.2.62:7006/get-messages?chatId=${chatId}`,
+        url: `http://192.168.2.62:7006/get-messages?chatId=${chatId}`, //получить сообщения
         method: 'GET',
         headers: {}
       }));
       const data = await response.json();
       setMessages(data);
-      setCurrentChatId(chatId);
+      setCurrentChatId(chatId); // Устанавливаем текущий чат
     } catch (e) {
       console.error('Ошибка загрузки сообщений:', e);
     }
   };
   const sendMessage = async () => {
-    if (!inputText) return;
+    if (!inputText) return; // Не отправляем пустые сообщения
     try {
       await UserSession.sendAuthorizedRequest(() => ({
-        url: `http://192.168.2.62:7006/send-message`,
+        url: `http://192.168.2.62:7006/send-message`, //отправить сообщение
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ chatId: currentChatId, content: inputText })
       }));
       console.log(inputText);
-      setInputText('');
-      fetchMessages(currentChatId);
+      setInputText(''); // Очищаем поле ввода
+      fetchMessages(currentChatId);// Обновляем сообщения
     } catch (e) {
       console.error('Ошибка отправки сообщения:', e);
     }
   };
+  // Рендер списка чатов
   const renderChatList = () => (
     <View style={styles.container1}>
     <View style={{backgroundColor:'#4371e6',height:'7%',alignItems: 'center', justifyContent: 'space-between',flexDirection:'row'}}>
         <Text style={styles.header}>Сообщения</Text>
          {UserSession.role === 'Admin' && (
-        <TouchableOpacity style={{ width:'30%',height:'45%',backgroundColor:'#f5f7fc',marginHorizontal:20,borderRadius:10,justifyContent:'center'}} onPress={openCreateDialog}>
+        <TouchableOpacity style={{ width:'30%',height:'45%',backgroundColor:'#f5f7fc',marginHorizontal:20,borderRadius:10,justifyContent:'center'}} onPress={openCreateDialog} /* Шапка экрана с кнопкой создания чата (для админа) */>
           <Text style={{ textAlign: 'center', color: '#4371e6',fontSize: 15, fontWeight: 'bold' }}>Создать чат</Text>
         </TouchableOpacity>
   )}
     </View>
-    {isLoading ? (
+    {isLoading ? ( /* Индикатор загрузки или список чатов */
         <View style={{ height: '83%', justifyContent: 'center', alignItems: 'center',backgroundColor:'#f5f7fc' }}>
           <ActivityIndicator size="large" color="#4371e6" />
         </View>
@@ -120,7 +121,7 @@ const Chats = () => {
       )}
     />
     </View>) : (<View style={{ height:'83%',justifyContent:'center',alignItems:'center',backgroundColor:'#f5f7fc'}}><Text style={{fontWeight:'bold',fontSize:20}}>На данный момент сообщений нет</Text></View>) }
-  <Modal visible={showCreateDialog} animationType="slide" transparent={true}>
+  <Modal visible={showCreateDialog} animationType="slide" transparent={true} /* Модальное окно для создания нового чата */>
   <View style={{ flex: 1, backgroundColor: '#000000aa', justifyContent: 'center' }}>
     <View style={{ backgroundColor: 'white', margin: 20, padding: 20, borderRadius: 10 }}>
       <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Создать чат</Text>
@@ -149,7 +150,7 @@ const Chats = () => {
     </View>
   </View>
 </Modal>
-    <View style={styles.footer}>
+    <View style={styles.footer} /* Нижнее меню навигации */>
             <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('CreateRequest')} >
               <ImageBackground source={require('../images/CrReqW.png')} style={{width:'100%',height:'100%'}} />
             </TouchableOpacity>
@@ -168,14 +169,15 @@ const Chats = () => {
           </View>
     </View>
   );
+  // Рендер экрана с сообщениями конкретного чата
   const renderMessages = () => (
-    <View style={styles.container2}>
+    <View style={styles.container2} /* Шапка с кнопкой возврата */>
       <View style={{backgroundColor:'#4371e6',height:'7%',alignItems: 'center', justifyContent: 'space-between',flexDirection:'row'}}>
       <TouchableOpacity onPress={() => {setCurrentChatId(null);fetchChats()}}>
         <Text style={styles.header}>← Назад</Text>
       </TouchableOpacity>
     </View>
-    <View style={{ height:'85%'}}>
+    <View style={{ height:'85%'}} /* Список сообщений */>
       <FlatList
         data={messages}
         keyExtractor={(item, index) => index.toString()}
@@ -202,7 +204,7 @@ const Chats = () => {
         )}
       />
       </View>
-      <View style={styles.inputContainer}>
+      <View style={styles.inputContainer} /* Поле ввода сообщения */>
         <TextInput
           value={inputText}
           onChangeText={setInputText}
@@ -215,6 +217,7 @@ const Chats = () => {
       </View>
     </View>
   );
+  // Возвращаем либо список чатов, либо сообщения в зависимости от currentChatId
   return currentChatId ? renderMessages() : renderChatList();
 };
 const styles = StyleSheet.create({

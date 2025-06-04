@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import UserSession from '../UserSession';
+import UserSession from '../UserSession'; //Данные о сессии
 const Registration = () => {
   const [username, setUsername] = useState('');
   const [login, setLogin] = useState('');
@@ -9,19 +9,19 @@ const Registration = () => {
   const [jobId, setJobId] = useState('');
   const [roleId, setRoleId] = useState('');
   const navigation = useNavigation();
-  const handleRegister = async () => {
-    if (!username || !login || !password || !jobId || !roleId) {
+  const handleRegister = async () => { //Функция регистрации
+    if (!username || !login || !password || !jobId || !roleId) { //проверка заполнения полей
       Alert.alert('Ошибка', 'Все поля обязательны для заполнения');
       return;
     }
     try {
         const response= await UserSession.sendAuthorizedRequest(() => ({
-            url:'http://192.168.2.62:7006/register', 
+            url:'http://192.168.2.62:7006/register', //отправка данных на регистрацию
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
+            body: JSON.stringify({ //данные для отправки
             username,
             login,
             password,
@@ -32,9 +32,9 @@ const Registration = () => {
       const data = await response.json();
       if (response.ok) {
         Alert.alert('Успех', 'Регистрация прошла успешно');
-        navigation.goBack();
+        navigation.goBack(); //возврат на предыдущую страницу
       } else {
-        Alert.alert('Ошибка', data.message || 'Ошибка регистрации');
+        Alert.alert('Ошибка', data.message || 'Ошибка регистрации'); //сообщение об ошибке
       }
     } catch (error) {
       Alert.alert('Ошибка', 'Не удалось подключиться к серверу');
@@ -50,40 +50,41 @@ const Registration = () => {
         value={username}
         onChangeText={setUsername}
       />
-      <TextInput
+      <TextInput /*Поле ввода логина*/
         style={styles.input}
         placeholder="Логин"
         value={login}
         onChangeText={setLogin}
         autoCapitalize="none"
       />
-      <TextInput
+      <TextInput /*Поле ввода пароля*/
         style={styles.input}
         placeholder="Пароль"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
       />
-      <TextInput
+      <TextInput /*Поле ввода должности*/
         style={styles.input}
         placeholder="ID должности"
         value={jobId}
         onChangeText={setJobId}
         keyboardType="numeric"
       />
-      <TextInput
+      <TextInput /*Поле ввода роли*/
         style={styles.input}
         placeholder="ID роли"
         value={roleId}
         onChangeText={setRoleId}
         keyboardType="numeric"
       />
-      <TouchableOpacity style={styles.button} onPress={handleRegister}>
+      <TouchableOpacity style={styles.button} onPress={handleRegister} /*Кнопка регистрации*/>
         <Text style={styles.buttonText}>Зарегистрировать</Text>
       </TouchableOpacity>
     </View>
   );
 };
+//Стили
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -5,23 +5,23 @@ import { useNavigation } from '@react-navigation/native';
 const LoginScreen = () => {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = useState(''); 
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const handleLogin = async () => {
     Keyboard.dismiss();
-    if (!login || !password) {
+    if (!login || !password) { //проверка полей
       setError('Поля должны быть заполнены');
       return;
     }
-    setLoading(true);
+    setLoading(true); //загрузка
     setError('');
-    const data = {
+    const data = { //данные для отправки
       Login: login,
       Password: password,
     };
     try {
-      const response = await fetch('http://192.168.2.62:7006/login', {
+      const response = await fetch('http://192.168.2.62:7006/login', { //отпровка данных для аутентификации
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,13 +31,13 @@ const LoginScreen = () => {
       if (response.ok) {
         setError('ОК');
         const respData = await response.json();
-        UserSession.username = respData.username;
-        UserSession.login = respData.login;
-        UserSession.password = respData.password;
-        UserSession.jobTitle = respData.jobTitle;
-        UserSession.role = respData.role;
-        UserSession.accessToken = respData.token;
-        UserSession.refreshToken = respData.refreshToken;
+        UserSession.username = respData.username; //имя ползователя
+        UserSession.login = respData.login; //логин
+        UserSession.password = respData.password; //пароль
+        UserSession.jobTitle = respData.jobTitle; //должность
+        UserSession.role = respData.role; //роль
+        UserSession.accessToken = respData.token; //аксес токен
+        UserSession.refreshToken = respData.refreshToken; //рефреш токен
         UserSession.userId = parseInt(respData.userId);
         if (UserSession.role === 'Admin') {
         navigation.reset({
@@ -64,27 +64,28 @@ const LoginScreen = () => {
   };
   return (
     <View style={styles.container}>
-      <TextInput
+      <TextInput /*Вводить логин*/
         placeholder="Логин"
         style={styles.input}
         value={login}
         onChangeText={setLogin}
       />
-      <TextInput
+      <TextInput /*Вводить пароль*/
         placeholder="Пароль"
         style={styles.input}
         value={password}
         onChangeText={setPassword}
         secureTextEntry
       />
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {error ? <Text style={styles.error}>{error}</Text> : null /*Ошибка*/} 
       <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
-        <Text style={styles.buttonText}>Войти</Text>
+        <Text style={styles.buttonText} /*Кнопка входа*/>Войти</Text>
       </TouchableOpacity>
     </View>
   );
 };
 export default LoginScreen;
+//стили
 const styles = StyleSheet.create({
   container: {
     flex: 1,

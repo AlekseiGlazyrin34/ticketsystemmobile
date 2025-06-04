@@ -24,7 +24,7 @@ const Account = () => {
             routes: [{ name: 'LoginScreen' }], // Имя экрана входа
           });
         }
-      }
+      } 
     ]);
   };
   return (
@@ -32,32 +32,32 @@ const Account = () => {
       <View style={{backgroundColor:'#4371e6',height:'7%',width:'100%',justifyContent:'space-around'}}>
           <Text style={styles.header}>Учетная запись</Text>
       </View>
-      <View style={styles.infoBox}>
+      <View style={styles.infoBox}  /*Информация об ученой записи*/> 
         <Text style={styles.infoText}>ФИО: {user.username}</Text>
         <Text style={styles.infoText}>Должность: {user.jobTitle}</Text>
         <Text style={styles.infoText}>Роль: {user.role}</Text>
         <Text style={styles.infoText}>Логин: {user.login}</Text>
       </View>
       {UserSession.role === 'Admin' && (<TouchableOpacity style={[styles.logoutButton,{backgroundColor: '#109c35',borderColor: '#19e04e'}]} onPress={()=>navigation.navigate('Registration')}>
-        <Text style={styles.logoutButtonText}>Добавить пользователя</Text>
+        <Text style={styles.logoutButtonText}/*Кнопка добавления пользователя для админа*/>Добавить пользователя</Text> 
       </TouchableOpacity>)}
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <Text style={styles.logoutButtonText}>Выйти из системы</Text>
+        <Text style={styles.logoutButtonText}/*Кнопка выхода из системы*/>Выйти из системы</Text> 
       </TouchableOpacity>
-      <View style={styles.footer}>
-            <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('CreateRequest')} >
-                <ImageBackground source={require('../images/CrReqW.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
+      <View style={styles.footer}/*Панел меню*/> 
+            <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('CreateRequest')} /*Кнопка создания запроса*/> 
+                <ImageBackground source={require('../images/CrReqW.png')} style={{width:'100%',height:'100%'}}></ImageBackground> 
             </TouchableOpacity>
-            {UserSession.role === 'Admin' ?(<TouchableOpacity style={[styles.footerBtn]} onPress={()=>navigation.navigate('AdminRequests')}>
+            {UserSession.role === 'Admin' ?(<TouchableOpacity style={[styles.footerBtn]} onPress={()=>navigation.navigate('AdminRequests')}/*Кнопка просмотра запросов для админа*/> 
             <ImageBackground source={require('../images/ListW.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
             </TouchableOpacity>) 
-            : (<TouchableOpacity style={[styles.footerBtn]} onPress={()=>navigation.navigate('UserRequests')}>
+            : (<TouchableOpacity style={[styles.footerBtn]} onPress={()=>navigation.navigate('UserRequests')}/*Кнопка просмотра запросов для пользователя*/> 
                 <ImageBackground source={require('../images/ListW.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
             </TouchableOpacity>)}
-            <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('Chats')}>
+            <TouchableOpacity style={styles.footerBtn} onPress={()=>navigation.navigate('Chats')}/*Кнопка просмотра чатов*/> 
                 <ImageBackground source={require('../images/MessagesW.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
             </TouchableOpacity>
-            <TouchableOpacity  style={[styles.footerBtn,{backgroundColor:'#f5f7fc'}]} disabled={true}>
+            <TouchableOpacity  style={[styles.footerBtn,{backgroundColor:'#f5f7fc'}]} disabled={true}/*Кнопка страницы учетной записи*/> 
                 <ImageBackground source={require('../images/Profile.png')} style={{width:'100%',height:'100%'}}></ImageBackground>
             </TouchableOpacity>
         </View>
