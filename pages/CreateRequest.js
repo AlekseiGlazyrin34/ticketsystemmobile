@@ -20,6 +20,7 @@ const CreateRequest = () => {
   const [image2, setImage2] = useState(null);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [selectedImage,selectImage] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const pickImage1 = async () => {
     // Запрос разрешения
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -70,6 +71,7 @@ const pickImage2 = async () => {
       Alert.alert('Ошибка', 'Пожалуйста, заполните все поля');
       return;
     }
+    setIsSubmitting(true); // Блокируем кнопку
     try {
       // Отправка данных на сервер
       const response = await UserSession.sendAuthorizedRequest(() => ({
@@ -110,6 +112,9 @@ const pickImage2 = async () => {
       console.error('Ошибка при отправке:', error);
       Alert.alert('Ошибка', 'Произошла ошибка при отправке запроса');
     }
+    finally {
+    setIsSubmitting(false); // Разблокируем кнопку в любом случае
+  }
   };
   const saveBase64ToGallery = async (base64Data) => {
       const { status } = await MediaLibrary.requestPermissionsAsync();
@@ -189,7 +194,7 @@ const pickImage2 = async () => {
          <Image source={{ uri: image2.uri }} style={{ width:'100%',height:'100%' }} />
         </TouchableOpacity>}
       </View> 
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+      <TouchableOpacity style={styles.button} onPress={handleSubmit} disabled={isSubmitting}>
         <Text style={styles.buttonText}>Создать запрос</Text>
       </TouchableOpacity>
       {selectedImage && <Modal visible={showCreateDialog} animationType="slide" transparent={true}>
